@@ -11,12 +11,12 @@
   "author": {
     "name": "OpenShift",
     "email": "ramr@example.org",
-    "url":  "http://www.openshift.com/"
+    "url":  "http://openshift.redhat.com/"
   },
-  "homepage": "http://www.openshift.com/",
+  "homepage": "http://openshift.redhat.com/",
   "repository": {
     "type": "git",
-    "url": "https://gitub.com/openshift/origin-server"
+    "url": "https://gitub.com/openshift/crankcase"
   },
 
   "engines": {
@@ -25,6 +25,7 @@
   },
 
   "dependencies": {
+    "express": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
