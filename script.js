@@ -28,7 +28,7 @@ var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.
 watercolor;
 
 var rt = rTree();
-
+var obj={};
 
 var layerControl = L.control.layers({"Stamen Watercolor":watercolor,"Map Quest Open":mq}).addTo(m);
 var counties = L.geoJson({features:[]},{
@@ -40,18 +40,35 @@ var counties = L.geoJson({features:[]},{
         }
         l.bindPopup(out.join("<br />"));
     }
+},style:function(f){
+if(obj[f.id]&&obj[f.id]>45000){
+return {fillColor:'red',weight:2}
+}else{
+return {fillColor:'green',weight:2}
+}
 }
 }).addTo(m);
-$.ajax('json/us-counties.json').then(function(data){
+	layerControl.addOverlay(counties,"Counties");
+m.addHash({lc:layerControl});
+$.when($.ajax('json/us-counties.json'),$.get(urlBase,params,'json')).then(function(a,b){
+var data = a[0];
+var rows = b[0];
+
+_.each(rows,function(r){
+obj[r[1]+r[2]]=parseInt(r[0],10);
+});
+
 rt.geoJSON(data,function(err,success){
 		if(!err){
 			showAll();
 		}
 	});
+	
+
+
 });
-//$.get(urlBase,params,'json').then(function(data){})
-layerControl.addOverlay(counties,"Counties");
-m.addHash({lc:layerControl});
+
+m.on("contextmenu moveend",showAll);
 function showAll(){
 	counties.clearLayers();
 	var bounds = m.getBounds();
@@ -64,4 +81,4 @@ function showAll(){
 		)
 	);
 }
-m.on("contextmenu moveend",showAll);
+
