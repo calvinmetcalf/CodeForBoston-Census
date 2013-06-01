@@ -1,5 +1,11 @@
 var apiKey = '0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f';
-
+var urlBase = 'http://api.census.gov/data/2011/acs5'
+var params = {
+	"key":apiKey,
+	"get":'B19013_001E',
+	"for":'county:*',
+	"in":'state:*'
+}
 
 var m = L.map('map');
 if(!location.hash){
@@ -21,11 +27,11 @@ var mq=L.tileLayer(url, optionsObject).addTo(m);
 var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',{attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'})
 watercolor;
 
-
+var rt = rTree();
 
 
 var layerControl = L.control.layers({"Stamen Watercolor":watercolor,"Map Quest Open":mq}).addTo(m);
-var counties = L.geoJson.ajax('json/us-counties.json',{
+var counties = L.geoJson({features:[]},{
 	onEachFeature:function (f,l){
     var out = [];
     if (f.properties){
@@ -36,5 +42,26 @@ var counties = L.geoJson.ajax('json/us-counties.json',{
     }
 }
 }).addTo(m);
+$.ajax('json/us-counties.json').then(function(data){
+rt.geoJSON(data,function(err,success){
+		if(!err){
+			showAll();
+		}
+	});
+});
+//$.get(urlBase,params,'json').then(function(data){})
+layerControl.addOverlay(counties,"Counties");
 m.addHash({lc:layerControl});
-
+function showAll(){
+	counties.clearLayers();
+	var bounds = m.getBounds();
+	counties.addData(
+		rt.bbox(
+			[
+				[bounds.getSouthWest().lng,bounds.getSouthWest().lat],
+				[bounds.getNorthEast().lng,bounds.getNorthEast().lat]
+			]
+		)
+	);
+}
+m.on("contextmenu moveend",showAll);
