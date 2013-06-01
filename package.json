@@ -11,25 +11,25 @@
   "author": {
     "name": "OpenShift",
     "email": "ramr@example.org",
-    "url":  "http://openshift.redhat.com/"
+    "url": "http://openshift.redhat.com/"
   },
   "homepage": "http://openshift.redhat.com/",
   "repository": {
     "type": "git",
     "url": "https://gitub.com/openshift/crankcase"
   },
-
   "engines": {
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
-
   "dependencies": {
-    "express": "*"
+    "express": "*",
+    "coffee-script": "~1.6.2",
+    "less-middleware": "~0.1.11",
+    "mustache": "~0.7.2"
   },
   "devDependencies": {},
   "bundleDependencies": [],
-
   "private": true,
   "main": "server.js"
 }
