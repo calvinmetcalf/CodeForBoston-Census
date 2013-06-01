@@ -25,5 +25,16 @@ watercolor;
 
 
 var layerControl = L.control.layers({"Stamen Watercolor":watercolor,"Map Quest Open":mq}).addTo(m);
+var counties = L.geoJson.ajax('json/us-counties.json',{
+	onEachFeature:function (f,l){
+    var out = [];
+    if (f.properties){
+        for(key in f.properties){
+            out.push(key+": "+f.properties[key]);
+        }
+        l.bindPopup(out.join("<br />"));
+    }
+}
+}).addTo(m);
 m.addHash({lc:layerControl});
 
