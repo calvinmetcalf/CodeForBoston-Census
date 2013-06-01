@@ -11,10 +11,32 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <style>
       body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
+       html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        overflow:hidden;
+      
+       }
       #map {
-      height : 400px;
+       margin-top: 50px;
+        width:100%;
+     height: 100%;
+     overflow:hidden;
+      }
+      .navbar-fixed-top{
+      	margin-bottom:0;
+      }
+      
+      @media (max-width: 780px) { 
+        .navbar .brand{
+        	margin-left:5px;
+        }
+        .btn.btn-info.cwm-collapsed{
+        	margin-bottom:40px;
+        }
       }
     </style>
 
@@ -29,31 +51,16 @@
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">Project name</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+     
+        <div class="container-fluid">
+     
+          <a class="brand" href="#" target="_blank">Data</a>
+          <form class="navbar-form pull-left form-search" id="searchForm"></form>
         </div>
-      </div>
-    </div>
-
-    <div class="container">
-
-      <div id="map"></div>
-
-    </div> <!-- /container -->
+      </div></div>
+    </div> <div class="container" id='map'></div><!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
@@ -63,6 +70,8 @@
     <script src="js/backbone.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 <script src="leaflet/leaflet.js"></script>
+<script src="js/style.js"></script>
+<script src="js/leaflet.hash.js"></script>
 <script src="script.js"></script>
   </body>
 </html>
