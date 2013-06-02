@@ -56,7 +56,7 @@ var counties = L.geoJson({features:[]},{
 		l.bindPopup(out.join("<br />"));
 	}
 	},style:function(f){
-			return {fillColor:colorbrewer.Spectral[11][scale(obj[f.id])],weight:0,fillOpacity:0.8}
+			return {fillColor:colorbrewer.RdYlBu[11][scale(obj[f.id])],weight:0,fillOpacity:0.8}
 		
 	}
 }).addTo(m);
