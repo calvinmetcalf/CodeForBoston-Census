@@ -39,7 +39,9 @@ var counties = L.geoJson({features:[]},{
         for(key in f.properties){
             out.push(key+": "+f.properties[key]);
         }
+        if(obj[f.id]){
         out.push('income: $'+obj[f.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+        }
         l.bindPopup(out.join("<br />"));
     }
 	},style:function(f){
