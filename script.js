@@ -29,7 +29,8 @@ watercolor;
 
 var rt = rTree();
 var obj={};
-
+var scale = d3.scale.quantile();
+scale.range(d3.range(11));
 var layerControl = L.control.layers({"Stamen Watercolor":watercolor,"Map Quest Open":mq}).addTo(m);
 var counties = L.geoJson({features:[]},{
 	onEachFeature:function (f,l){
@@ -38,26 +39,26 @@ var counties = L.geoJson({features:[]},{
         for(key in f.properties){
             out.push(key+": "+f.properties[key]);
         }
+        out.push('income: $'+obj[f.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
         l.bindPopup(out.join("<br />"));
     }
-},style:function(f){
-if(obj[f.id]&&obj[f.id]>45000){
-return {fillColor:'red',weight:2}
-}else{
-return {fillColor:'green',weight:2}
-}
-}
+	},style:function(f){
+			return {fillColor:colorbrewer.Spectral[11][scale(obj[f.id])],weight:0,fillOpacity:0.8}
+		
+	}
 }).addTo(m);
 	layerControl.addOverlay(counties,"Counties");
 m.addHash({lc:layerControl});
 $.when($.ajax('json/us-counties.json'),$.get(urlBase,params,'json')).then(function(a,b){
 var data = a[0];
 var rows = b[0];
-
+var vals = [];
 _.each(rows,function(r){
-obj[r[1]+r[2]]=parseInt(r[0],10);
+var val = parseInt(r[0],10);
+obj[r[1]+r[2]]=val;
+vals.push(val);
 });
-
+scale.domain(vals);
 rt.geoJSON(data,function(err,success){
 		if(!err){
 			showAll();
