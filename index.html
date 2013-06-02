@@ -61,7 +61,11 @@
         <div class="container-fluid">
      
           <a class="brand" href="#" target="_blank">Data</a>
-          <form class="navbar-form pull-left form-search" id="searchForm"></form>
+          <form class="navbar-form pull-left" id="searchForm"><select id="whichValue">
+  <option value="income">Income</option>
+  <option value="inequality">Inequality</option>
+ 
+</select></form>
         </div>
       </div></div>
     </div> <div class="container" id='map'></div><!-- /container -->
@@ -72,11 +76,12 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/lodash.compat.min.js"></script>
     <!--<script src="js/backbone.min.js"></script>
-    <script src="js/communist.min.js"></script>-->
+    <script src="js/communist.min.js"></script>
+    <script src="js/leaflet.hash.js"></script>-->
     <script src="js/bootstrap.min.js"></script>
 <script src="leaflet/leaflet.js"></script>
 <script src="js/style.js"></script>
-<script src="js/leaflet.hash.js"></script>
+
 <script src="js/rtree.js"></script>
 <script src="js/d3.min.js"></script>
 <script src="js/colorbrewer.js"></script>

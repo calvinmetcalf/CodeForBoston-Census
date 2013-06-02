@@ -1,18 +1,31 @@
 var apiKey = '0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f';
 var urlBase = 'http://api.census.gov/data/2011/acs5';
-var cKey='B19013_001E';
-var inEq='B19083_001E';
+var things={}
+things.income={key:'B19013_001E'}
+things.inequality={key:'B19083_001E'}
+var current = 'inequality'
 var params = {
 	"key":apiKey,
-	"get":inEq,
+	"get":things[current].key,
 	"for":'county:*',
 	"in":'state:*'
 }
-
+$('#whichValue').on('change',function(){
+	current = $('#whichValue').val();
+	$.get(urlBase,{
+	"key":apiKey,
+	"get":things[current].key,
+	"for":'county:*',
+	"in":'state:*'
+},'json').then(function(a){
+	buildValues (data, a);
+	showAll();
+})
+});
 var m = L.map('map');
-if(!location.hash){
+//if(!location.hash){
 	m.setView([42.076,-71.505], 8)
-};
+//};
 
 var url = 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg';
 
@@ -41,7 +54,7 @@ var counties = L.geoJson({features:[]},{
 			out.push(key+": "+f.properties[key]);
 		}
 		if(obj[f.id]){
-			out.push('income: $'+obj[f.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+			out.push(current+': '+obj[f.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
 		}
 		l.bindPopup(out.join("<br />"));
 	}
@@ -50,18 +63,22 @@ var counties = L.geoJson({features:[]},{
 		
 	}
 }).addTo(m);
-	layerControl.addOverlay(counties,"Counties");
-m.addHash({lc:layerControl});
-$.when($.ajax('json/us-counties.json'),$.get(urlBase,params,'json')).then(function(a,b){
-	data = a[0];
-	var rows = b[0];
-	var vals = [];
+function buildValues (data, rows){
+var vals = [];
 	_.each(rows,function(r){
 		var val = parseFloat(r[0],10);
 		obj[r[1]+r[2]]=val;
 		vals.push(val);
 	});
 	scale.domain(vals);
+}
+	layerControl.addOverlay(counties,"Counties");
+//m.addHash({lc:layerControl});
+$.when($.ajax('json/us-counties.json'),$.get(urlBase,params,'json')).then(function(a,b){
+	data = a[0];
+	var rows = b[0];
+	buildValues (data, rows)
+	
 	rt.geoJSON(data,function(err,success){
 		if(!err){
 			showAll();
