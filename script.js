@@ -1,12 +1,9 @@
 var apiKey = '0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f';
 var urlBase = 'http://api.census.gov/data/2011/acs5';
-var things={}
-things.income={key:'B19013_001E'}
-things.inequality={key:'B19083_001E'}
-var current = 'inequality'
+var current = $('#whichValue').val();
 var params = {
 	"key":apiKey,
-	"get":things[current].key,
+	"get":$('#whichValue option:selected').data('get'),
 	"for":'county:*',
 	"in":'state:*'
 }
@@ -14,7 +11,7 @@ $('#whichValue').on('change',function(){
 	current = $('#whichValue').val();
 	$.get(urlBase,{
 	"key":apiKey,
-	"get":things[current].key,
+	"get":$('#whichValue option:selected').data('get'),
 	"for":'county:*',
 	"in":'state:*'
 },'json').then(function(a){
