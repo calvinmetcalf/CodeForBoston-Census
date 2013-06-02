@@ -2,11 +2,36 @@ var apiKey = '0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f';
 var urlBase = 'http://api.census.gov/data/2011/acs5';
 var current = $('#whichValue').val();
 var params = {
-	"key":apiKey,
-	"get":$('#whichValue option:selected').data('get'),
 	"for":'county:*',
-	"in":'state:*'
+	"in":'state:*',
+	"key":apiKey,
+	"get":$('#whichValue option:selected').data('get')
 }
+transforms = {
+  "Mean Commute": function(a) {
+    var b = [];
+    var ct,i;
+    for (i = 0; i < a.length; i++) {
+      ct = [parseFloat(a[i][0]) / parseFloat(a[i][1]), a[i][2], a[i][3]];
+      if (!ct[0]) {
+        ct[0] = 0;
+      }
+      b.push(ct);
+    }
+    return b;
+  },
+  "Income Car Vs Trans": function(a) {
+    var b = [],i,ct;
+    for (i = 0; i < a.length; i++) {
+      ct = [parseFloat(a[i][0]) - parseFloat(a[i][1]), a[i][2], a[i][3]];
+      if (!ct[0]) {
+        ct[0] = 0;
+      }
+      b.push(ct);
+    }
+    return b;
+  },
+};
 $('#whichValue').on('change',function(){
 	current = $('#whichValue').val();
 	$.get(urlBase,{
@@ -15,7 +40,13 @@ $('#whichValue').on('change',function(){
 	"for":'county:*',
 	"in":'state:*'
 },'json').then(function(a){
-	buildValues (data, a);
+var metric = $('#whichValue option:selected').val();
+  transform = transforms[metric];
+  if (transform) {
+   buildValues(data, transform(a));
+  }else{
+	buildValues(data, a);
+	}
 	showAll();
 })
 });
@@ -62,11 +93,19 @@ var counties = L.geoJson({features:[]},{
 }).addTo(m);
 function buildValues (data, rows){
 var vals = [];
-	_.each(rows,function(r){
+	if(rows[0].length===4){
+		_.each(rows,function(r){
+			var val = parseFloat(r[0],10);
+			obj[r[2]+r[3]]=val;
+			vals.push(val);
+		});
+	}else if(rows[0].length===3){
+		_.each(rows,function(r){
 		var val = parseFloat(r[0],10);
-		obj[r[1]+r[2]]=val;
-		vals.push(val);
-	});
+			obj[r[1]+r[2]]=val;
+			vals.push(val);
+		});
+	}
 	scale.domain(vals);
 }
 	layerControl.addOverlay(counties,"Counties");
