@@ -1,18 +1,19 @@
 var apiKey = '0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f';
 var urlBase = 'http://api.census.gov/data/2011/acs5';
 var cKey='B19013_001E';
+var inEq='B19083_001E';
 var params = {
 	"key":apiKey,
-	"get":cKey,
+	"get":inEq,
 	"for":'county:*',
 	"in":'state:*'
 }
 
 var m = L.map('map');
 if(!location.hash){
-	m.setView([39.61, -95.27], 4)
+	m.setView([42.076,-71.505], 8)
 };
-m.addHash();
+
 var url = 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg';
 
 var attributionText = 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
@@ -25,8 +26,7 @@ var optionsObject = {
 }
 
 var mq=L.tileLayer(url, optionsObject).addTo(m);
-var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',{attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'})
-watercolor;
+var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',{attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
 var data;
 var rt = rTree();
 var obj={};
@@ -57,7 +57,7 @@ $.when($.ajax('json/us-counties.json'),$.get(urlBase,params,'json')).then(functi
 	var rows = b[0];
 	var vals = [];
 	_.each(rows,function(r){
-		var val = parseInt(r[0],10);
+		var val = parseFloat(r[0],10);
 		obj[r[1]+r[2]]=val;
 		vals.push(val);
 	});
