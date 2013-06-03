@@ -49,9 +49,10 @@ $('#whichValue').on('change',function(){
 	});
 });
 var m = L.map('map');
-//if(!location.hash){
+if(!location.hash){
 	m.setView([42.076,-71.505], 8);
-//};
+}
+m.addHash();
 
 var url = 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg';
 
