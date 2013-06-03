@@ -112,7 +112,7 @@ var vals = [];
 }
 	layerControl.addOverlay(counties,"Counties");
 //m.addHash({lc:layerControl});
-$.when($.ajax('json/us-counties.json'),$.get(urlBase,params,'json')).then(function(a,b){
+$.when($.ajax('json/us-counties.json'),$.ajax({url:urlBase,data:params,dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
 	data = a[0];
 	var rows = b[0];
 	buildValues (data, rows);
