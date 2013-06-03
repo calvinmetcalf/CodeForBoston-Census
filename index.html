@@ -51,26 +51,34 @@
   </head>
 
   <body>
-<div class="github-fork-ribbon-wrapper right">
-        <div class="github-fork-ribbon">
-            <a href="https://github.com/calvinmetcalf/CodeForBoston-Census">Fork me on GitHub</a>
-        </div></div>
-  <div class="navbar navbar-inverse navbar-fixed-top">
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
-     
         <div class="container-fluid">
-     
-          <a class="brand" href="#" target="_blank">Data</a>
-          <form class="navbar-form pull-left" id="searchForm"><select id="whichValue">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/" target="_blank">Data</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+             <li></li><form class="navbar-form pull-left" id="searchForm"><select id="whichValue">
   <option value="Income" data-get="B19013_001E">Income</option>
   <option value="Inequality" data-get="B19083_001E">Inequality</option>
 
  <option value="Mean Commute" data-get="B08131_001E,B08122_001E">Mean Commute time</option>
  <option value="Income Car Vs Trans" data-get="B08121_002E,B08121_004E">Income difference, car vs transit</option>
-</select></form>
-        
-      </div></div>
-    </div> <div class="container" id='map'></div><!-- /container -->
+</select></form></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+ <div class="container-fluid" id='map'></div><div class="github-fork-ribbon-wrapper left-bottom">
+        <div class="github-fork-ribbon">
+            <a href="https://github.com/calvinmetcalf/CodeForBoston-Census">Fork me on GitHub</a>
+        </div></div><!-- /container -->
 
     <!-- Le javascript
     ================================================== -->

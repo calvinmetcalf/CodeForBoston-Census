@@ -67,7 +67,7 @@ var optionsObject = {
 var mq=L.tileLayer(url, optionsObject).addTo(m);
 var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',{attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
 var data;
-var rt = communist({
+var rt = makeRT({
 	initialize:function(){importScripts('js/rtree.js');this.rt=rTree()},
 	set:function(data,cb){this.rt.geoJSON(data,function(err,data){if(!err){cb(true)}})},
 	bbox:function(data){return this.rt.bbox(data)}
@@ -139,4 +139,22 @@ function showAll(){
 		counties.addData(rData);
 		});
 }
-
+function makeRT(obj){
+	var newObj={};
+	if(typeof Worker === "function"){
+		return communist(obj);
+	} else {
+		obj.rt=rTree();
+		newObj.set=function(data){
+			var promise = communist.deferred();
+			obj.set(data,function(rst){
+				promise.resolve(rst);
+			});
+			return promise.promise;
+		};
+		newObj.bbox=function(bbox){
+			return communist.resolve(obj.bbox(bbox))
+		};
+		return newObj;
+	}
+}
