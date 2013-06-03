@@ -7,30 +7,28 @@ var params = {
 	"key":apiKey,
 	"get":$('#whichValue option:selected').data('get')
 }
-transforms = {
-  "Mean Commute": function(a) {
-    var b = [];
-    var ct,i;
-    for (i = 0; i < a.length; i++) {
-      ct = [parseFloat(a[i][0]) / parseFloat(a[i][1]), a[i][2], a[i][3]];
-      if (!ct[0]) {
-        ct[0] = 0;
-      }
-      b.push(ct);
-    }
-    return b;
-  },
-  "Income Car Vs Trans": function(a) {
-    var b = [],i,ct;
-    for (i = 0; i < a.length; i++) {
-      ct = [parseFloat(a[i][0]) - parseFloat(a[i][1]), a[i][2], a[i][3]];
-      if (!ct[0]) {
-        ct[0] = 0;
-      }
-      b.push(ct);
-    }
-    return b;
-  },
+var transforms = {
+	"Mean Commute": function(a) {
+		var b = [];
+		var ct,i,len;
+		for (i = 0,len=a.length; i < len; i++) {
+			ct = [parseFloat(a[i][0]) / parseFloat(a[i][1]), a[i][2], a[i][3]];
+			
+				ct[0] = ct[0]|0;
+			
+			b.push(ct);
+		}
+		return b;
+	},
+	"Income Car Vs Trans": function(a) {
+		var b = [],i,ct,len;
+		for (i = 0,len=a.length; i < len; i++) {
+			ct = [parseFloat(a[i][0]) - parseFloat(a[i][1]), a[i][2], a[i][3]];
+			ct[0] = ct[0]|0;
+			b.push(ct);
+		}
+		return b;
+	},
 };
 $('#whichValue').on('change',function(){
 	current = $('#whichValue').val();
@@ -39,20 +37,20 @@ $('#whichValue').on('change',function(){
 	"get":$('#whichValue option:selected').data('get'),
 	"for":'county:*',
 	"in":'state:*'
-},'json').then(function(a){
-var metric = $('#whichValue option:selected').val();
-  transform = transforms[metric];
-  if (transform) {
-   buildValues(data, transform(a));
-  }else{
-	buildValues(data, a);
-	}
-	showAll();
-})
+	},'json').then(function(a){
+		var metric = $('#whichValue option:selected').val();
+		var transform = transforms[metric];
+		if (transform) {
+			buildValues(data, transform(a));
+		} else {
+			buildValues(data, a);
+		}
+		showAll();
+	});
 });
 var m = L.map('map');
 //if(!location.hash){
-	m.setView([42.076,-71.505], 8)
+	m.setView([42.076,-71.505], 8);
 //};
 
 var url = 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg';
@@ -64,12 +62,16 @@ var mapquestSubdomains = '1234';
 var optionsObject = {
 	attribution : attributionText,
 	subdomains : mapquestSubdomains
-}
+};
 
 var mq=L.tileLayer(url, optionsObject).addTo(m);
 var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',{attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
 var data;
-var rt = rTree();
+var rt = communist({
+	initialize:function(){importScripts('js/rtree.js');this.rt=rTree()},
+	set:function(data,cb){this.rt.geoJSON(data,function(err,data){if(!err){cb(true)}})},
+	bbox:function(data){return this.rt.bbox(data)}
+});
 var obj={};
 var scale = d3.scale.quantile();
 scale.range(d3.range(11));
@@ -113,26 +115,28 @@ var vals = [];
 $.when($.ajax('json/us-counties.json'),$.get(urlBase,params,'json')).then(function(a,b){
 	data = a[0];
 	var rows = b[0];
-	buildValues (data, rows)
+	buildValues (data, rows);
 	
-	rt.geoJSON(data,function(err,success){
-		if(!err){
+	rt.set(data).then(function(){
+	
 			showAll();
-		}
+	
 	});
 });
 
 m.on("contextmenu moveend",showAll);
 function showAll(){
-	counties.clearLayers();
+	
 	var bounds = m.getBounds();
-	counties.addData(
+	
 		rt.bbox(
 			[
 				[bounds.getSouthWest().lng,bounds.getSouthWest().lat],
 				[bounds.getNorthEast().lng,bounds.getNorthEast().lat]
 			]
-		)
-	);
+		).then(function(rData){
+	counties.clearLayers();
+		counties.addData(rData);
+		});
 }
 
