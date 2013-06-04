@@ -7,29 +7,6 @@ var params = {
 	"key":apiKey,
 	"get":$('#whichValue option:selected').data('get')
 }
-var transforms = {
-	"Mean Commute": function(a) {
-		var b = [];
-		var ct,i,len;
-		for (i = 0,len=a.length; i < len; i++) {
-			ct = [parseFloat(a[i][0]) / parseFloat(a[i][1]), a[i][2], a[i][3]];
-			
-				ct[0] = ct[0]|0;
-			
-			b.push(ct);
-		}
-		return b;
-	},
-	"Income Car Vs Trans": function(a) {
-		var b = [],i,ct,len;
-		for (i = 0,len=a.length; i < len; i++) {
-			ct = [parseFloat(a[i][0]) - parseFloat(a[i][1]), a[i][2], a[i][3]];
-			ct[0] = ct[0]|0;
-			b.push(ct);
-		}
-		return b;
-	},
-};
 $('#whichValue').on('change',function(){
 	current = $('#whichValue').val();
 	$.get(urlBase,{
@@ -39,7 +16,7 @@ $('#whichValue').on('change',function(){
 	"in":'state:*'
 	},'json').then(function(a){
 		var metric = $('#whichValue option:selected').val();
-		var transform = transforms[metric];
+		var transform = vizes.findWhere({name:metric}).get('transform')
 		if (transform) {
 			buildValues(data, transform(a));
 		} else {
