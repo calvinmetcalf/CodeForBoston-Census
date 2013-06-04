@@ -69,8 +69,8 @@ var mq=L.tileLayer(url, optionsObject).addTo(m);
 var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',{attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
 var data;
 var rt = makeRT({
-	initialize:function(){importScripts('js/rtree.js');this.rt=rTree()},
-	set:function(data,cb){this.rt.geoJSON(data,function(err,data){if(!err){cb(true)}})},
+	initialize:function(){importScripts('js/rtree.js','js/topojson.js');this.rt=rTree()},
+	set:function(data,cb){this.rt.geoJSON(topojson.feature(data,data.objects.counties),function(err,data){if(!err){cb(true)}})},
 	bbox:function(data){return this.rt.bbox(data)}
 });
 var obj={};
@@ -90,7 +90,7 @@ var counties = L.geoJson({features:[]},{
 		l.bindPopup(out.join("<br />"));
 	}
 	},style:function(f){
-			return {fillColor:colorbrewer.RdYlBu[11][scale(obj[f.id])],weight:0,fillOpacity:0.8}
+			return {fillColor:colorbrewer.RdYlBu[11][scale(obj[f.properties.STATE+f.properties.COUNTY])],weight:0,fillOpacity:0.8}
 		
 	}
 }).addTo(m);
@@ -113,7 +113,7 @@ var vals = [];
 }
 	layerControl.addOverlay(counties,"Counties");
 //m.addHash({lc:layerControl});
-$.when($.ajax('json/us-counties.json'),$.ajax({url:urlBase,data:params,dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
+$.when($.ajax('json/counties.json'),$.ajax({url:urlBase,data:params,dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
 	data = a[0];
 	var rows = b[0];
 	buildValues (data, rows);
