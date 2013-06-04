@@ -11,7 +11,8 @@ var items=[
 				b.push(ct);
 			}
 			return b;
-		}
+		},
+		flip:true
 	},{
 		name:"Income",
 		tables:"B19013_001E"
@@ -21,7 +22,8 @@ var items=[
 		tables:"B19083_001E",
 		stringRep:function(a){
 			return  parseFloat(a,10).toPrecision(5);
-		}
+		},
+		flip:true
 	},{
 		name:"Mean Commute",
 		tables:"B08131_001E,B08122_001E",
@@ -34,7 +36,8 @@ var items=[
 				b.push(ct);
 			}
 			return b;
-		}
+		},
+		flip:true
 	},{
 		name:"Income Car Vs Trans",
 		tables:"B08121_002E,B08121_004E",
@@ -59,6 +62,7 @@ var items=[
 				b.push(ct);
 			}
 			return b;
-		}
+		},
+		flip:true
 	}
 ];

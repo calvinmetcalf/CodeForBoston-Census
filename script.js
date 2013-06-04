@@ -54,13 +54,14 @@ selector.render();
 var Legend = Backbone.View.extend({
 	template:Mustache.compile('<strong>Legend</strong><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul>'),
 	render:function(){
-		var vals = this.scale.quantiles().map(function(a,i){return {value:vizes.findWhere({name:$('#whichValue').val()}).get("stringRep")(a),color:colorbrewer.RdYlBu[11][i]}});
+		var cur = vizes.findWhere({name:$('#whichValue').val()});
+		var vals = this.scale.quantiles().map(function(a,i){return {value:cur.get("stringRep")(a),color:colorbrewer.RdYlBu[11][cur.get('flip')?10-i:i]}});
 		this.$el.html(this.template({items:vals}));
 	},collection:vizes,
 	initialize:function(){
 		this.collection.on('renderLegend',function(){this.render()},this);
 		this.scale = d3.scale.quantile();
-this.scale.range(d3.range(11));
+		this.scale.range(d3.range(11));
 	}
 });
 
@@ -71,6 +72,17 @@ var Polys = Backbone.View.extend({
 	current : function(){return this.$el.val()},
 	collection:vizes,
 	obj:{},
+	style:function(id){
+		if(!this.obj[id]){
+			return;
+		}
+		if(this.collection.findWhere({name:this.current()}).get('flip')){
+			return colorbrewer.RdYlBu[11][10-this.options.legend.scale(this.obj[id])];
+		}else{
+			return colorbrewer.RdYlBu[11][this.options.legend.scale(this.obj[id])];
+		}
+			
+	},
 	params : function(){
 		return {
 			"for":'county:*',
@@ -82,9 +94,17 @@ var Polys = Backbone.View.extend({
 	events:{
 		'change':'valueChange'
 	},
-	buildValues:function(rows){
+	buildValues:function(oRows){
 		var self=this;
 		var vals = [];
+		var metric = this.current();
+		var rows;
+		var transform = self.collection.findWhere({name:metric}).get('transform');
+			if (transform) {
+				rows=transform(oRows);
+			} else {
+				rows=oRows;
+			}
 		if(rows[0].length===4){
 			_.each(rows,function(r){
 				var val = parseFloat(r[0],10);
@@ -107,15 +127,8 @@ var Polys = Backbone.View.extend({
 	},
 	valueChange:function (){
 		var self = this;
-		$.get(this.urlBase,this.params(),'json').then(function(a){
-			var metric = $('#whichValue option:selected').val();
-			var transform = vizes.findWhere({name:metric}).get('transform');
-			if (transform) {
-				console.log(a);
-				self.buildValues( transform(a));
-			} else {
-				self.buildValues(a);
-			}
+		$.ajax({url:polys.urlBase,data:polys.params(),dataType:'jsonp',jsonp:'jsonp',cache:true}).then(function(a){
+			self.buildValues( a);
 			updateMap();
 		});
 	}
@@ -204,8 +217,8 @@ var counties = L.geoJson({features:[]},{
 		if(id.length === 4){
 			id = '0'+id;
 		}
-		if(polys.obj[id]){
-			return {fillColor:colorbrewer.RdYlBu[11][legend.scale(polys.obj[id])],weight:0,fillOpacity:0.8};
+		if(polys.style(id)){
+			return {fillColor:polys.style(id),weight:0,fillOpacity:0.8};
 		}else{
 			return {stroke:false,fill:false};
 		}
