@@ -16,7 +16,7 @@ $('#whichValue').on('change',function(){
 	"in":'state:*'
 	},'json').then(function(a){
 		var metric = $('#whichValue option:selected').val();
-		var transform = vizes.findWhere({name:metric}).get('transform')
+		var transform = vizes.findWhere({name:metric}).get('transform');
 		if (transform) {
 			buildValues(data, transform(a));
 		} else {
