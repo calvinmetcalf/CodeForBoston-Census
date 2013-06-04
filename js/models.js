@@ -52,7 +52,7 @@ var items=[
 		}
 	},{
 		name:"Percent on foodstamps",
-		tables:"B22007_001E,B01001_001E",
+		tables:"B22007_002E,B22007_001E",
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
