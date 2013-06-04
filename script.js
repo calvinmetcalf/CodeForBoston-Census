@@ -55,7 +55,7 @@ var Legend = Backbone.View.extend({
 	template:Mustache.compile('<strong>Legend</strong><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul>'),
 	render:function(){
 		var cur = vizes.findWhere({name:$('#whichValue').val()});
-		var vals = this.scale.quantiles().map(function(a,i){return {value:cur.get("stringRep")(a),color:colorbrewer.RdYlBu[11][cur.get('flip')?10-i:i]}});
+		var vals = this.scale.quantiles().map(function(a,i){return {value:cur.get("stringRep")(a),color:colorbrewer.RdYlBu[11][!cur.get('flip')?10-i:i]}});
 		this.$el.html(this.template({items:vals}));
 	},collection:vizes,
 	initialize:function(){
@@ -76,7 +76,7 @@ var Polys = Backbone.View.extend({
 		if(!this.obj[id]){
 			return;
 		}
-		if(this.collection.findWhere({name:this.current()}).get('flip')){
+		if(!this.collection.findWhere({name:this.current()}).get('flip')){
 			return colorbrewer.RdYlBu[11][10-this.options.legend.scale(this.obj[id])];
 		}else{
 			return colorbrewer.RdYlBu[11][this.options.legend.scale(this.obj[id])];
