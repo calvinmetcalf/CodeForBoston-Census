@@ -30,7 +30,21 @@ if(!location.hash){
 	m.setView([42.076,-71.505], 8);
 }
 m.addHash();
+var MyControl = L.Control.extend({
+    options: {
+        position: 'bottomright'
+    },
 
+    onAdd: function (map) {
+        // create the control container with a particular class name
+        var container = L.DomUtil.create('div', 'my-custom-control leaflet-control-layers');
+container.id="legend";
+
+        return container;
+    }
+});
+m.addControl(new MyControl());
+var legend= new Legend({el:$('#legend')});
 var url = 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg';
 
 var attributionText = 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
@@ -58,7 +72,7 @@ var counties = L.geoJson({features:[]},{
 	onEachFeature:function (f,l){
 	var out = [];
 	if (f.properties){
-		for(key in f.properties){
+		for(var key in f.properties){
 			out.push(key+": "+f.properties[key]);
 		}
 	}	
@@ -87,21 +101,27 @@ var counties = L.geoJson({features:[]},{
 	}
 }).addTo(m);
 function buildValues (data, rows){
+	
 var vals = [];
 	if(rows[0].length===4){
 		_.each(rows,function(r){
 			var val = parseFloat(r[0],10);
 			obj[r[2]+r[3]]=val;
+			if(val){
 			vals.push(val);
+			}
 		});
 	}else if(rows[0].length===3){
 		_.each(rows,function(r){
 		var val = parseFloat(r[0],10);
 			obj[r[1]+r[2]]=val;
+			if(val){
 			vals.push(val);
+			}
 		});
 	}
 	scale.domain(vals);
+	legend.render();
 }
 	layerControl.addOverlay(counties,"Counties");
 //m.addHash({lc:layerControl});
@@ -151,3 +171,6 @@ function makeRT(obj){
 		return newObj;
 	}
 }
+
+
+

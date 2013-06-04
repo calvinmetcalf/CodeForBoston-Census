@@ -2,9 +2,13 @@ var items=[
 		{
 			name:"Income",
 			tables:"B19013_001E"
+			
 		},{
 			name:"Inequality",
-			tables:"B19083_001E"
+			tables:"B19083_001E",
+			stringRep:function(a){
+				return  parseFloat(a,10).toPrecision(5);
+			}
 		},{
 			name:"Mean Commute",
 			tables:"B08131_001E,B08122_001E",
@@ -36,7 +40,10 @@ var items=[
 	];
 var Viz = Backbone.Model.extend({
 	defaults: {
-		transform:false
+		transform:false,
+		stringRep:function(a){
+				return  parseInt(a,10).toString(10);
+			}
 	}
 });
 
@@ -46,7 +53,7 @@ var Vizes = Backbone.Collection.extend({
 
 var vizes = new Vizes(items);
 
-var Selctor = Backbone.View.extend({
+var Selector = Backbone.View.extend({
 	el:$('#whichValue'),
 	collection:vizes,
 	template:Mustache.compile('{{#items}}<option value="{{name}}" data-get="{{tables}}">{{name}}</option>{{/items}}'),
@@ -54,5 +61,13 @@ var Selctor = Backbone.View.extend({
 		this.$el.html(this.template({items:this.collection.toJSON()}));
 	}
 });
-var selctor = new Selctor();
-selctor.render();
+var selector = new Selector();
+selector.render();
+
+var Legend = Backbone.View.extend({
+	template:Mustache.compile('<strong>Legend</strong><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul>'),
+	render:function(){
+		var vals = scale.quantiles().map(function(a,i){return {value:vizes.findWhere({name:current}).get("stringRep")(a),color:colorbrewer.RdYlBu[11][i]}});
+		var stuff = this.$el.html(this.template({items:vals}));
+	}
+});
