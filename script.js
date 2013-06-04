@@ -73,11 +73,12 @@ var Polys = Backbone.View.extend({
 	obj:{},
 	params : function(){
 		return {
-		"for":'county:*',
-		"in":'state:*',
-		"key":this.apiKey,
-		"get":this.$('option:selected').data('get')
-	}},
+			"for":'county:*',
+			"in":'state:*',
+			"key":this.apiKey,
+			"get":this.$('option:selected').data('get')
+		}
+	},
 	events:{
 		'change':'valueChange'
 	},
@@ -110,6 +111,7 @@ var Polys = Backbone.View.extend({
 			var metric = $('#whichValue option:selected').val();
 			var transform = vizes.findWhere({name:metric}).get('transform');
 			if (transform) {
+				console.log(a);
 				self.buildValues( transform(a));
 			} else {
 				self.buildValues(a);
@@ -158,15 +160,6 @@ var MyControl = L.Control.extend({
 	}
 });
 m.addControl(new MyControl());
-var url = 'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpeg';
-var attributionText = 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-var mapquestSubdomains = '1234';
-var optionsObject = {
-	attribution : attributionText,
-	subdomains : mapquestSubdomains
-};
-var mq=L.tileLayer(url, optionsObject).addTo(m);
-var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',{attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
 var layerControl = L.control.layers.provided(['MapQuestOpen.OSM','Stamen.Watercolor','OpenStreetMap.Mapnik','Stamen.Toner']).addTo(m);
 
 //start views
