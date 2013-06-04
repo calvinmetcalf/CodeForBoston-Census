@@ -84,13 +84,28 @@ var counties = L.geoJson({features:[]},{
 		for(key in f.properties){
 			out.push(key+": "+f.properties[key]);
 		}
-		if(obj[f.id]){
-			out.push(current+': '+obj[f.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+	}	
+	var id=f.id.toString(10);
+	if(id.length === 4){
+		id = '0'+id;
+	}
+	//out.push("id: "+id);
+		if(obj[id]){
+			out.push(current+': '+obj[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+		
 		}
 		l.bindPopup(out.join("<br />"));
-	}
+	
 	},style:function(f){
-			return {fillColor:colorbrewer.RdYlBu[11][scale(obj[f.properties.STATE+f.properties.COUNTY])],weight:0,fillOpacity:0.8}
+		var id=f.id.toString(10);
+	if(id.length === 4){
+		id = '0'+id;
+	}
+	if(obj[id]){
+			return {fillColor:colorbrewer.RdYlBu[11][scale(obj[id])],weight:0,fillOpacity:0.8};
+	}else{
+		return {stroke:false,fill:false};
+	}
 		
 	}
 }).addTo(m);
@@ -113,7 +128,7 @@ var vals = [];
 }
 	layerControl.addOverlay(counties,"Counties");
 //m.addHash({lc:layerControl});
-$.when($.ajax('json/counties.json'),$.ajax({url:urlBase,data:params,dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
+$.when($.ajax('json/us-10m.json'),$.ajax({url:urlBase,data:params,dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
 	data = a[0];
 	var rows = b[0];
 	buildValues (data, rows);
