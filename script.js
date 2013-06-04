@@ -22,7 +22,7 @@ L.Control.Layers.prototype._addItem= function (obj) {
 		var container = obj.overlay ? this._overlaysList : this._baseLayersList;
 		container.appendChild(label);
 		return label;
-}
+};
 
 var Viz = Backbone.Model.extend({
 	defaults: {
