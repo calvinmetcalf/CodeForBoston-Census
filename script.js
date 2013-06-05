@@ -184,16 +184,21 @@ var polys= new Polys({legend:legend});
 //set up webWorker
 var rt = makeRT({
 	initialize:function(){
-		importScripts('js/rtree.js','js/topojson.js');
+		importScripts('js/rtree.js','js/topojson.js','json/bigData.json');
 		this.rt=rTree();
+		this.rt.geoJSON(topojson.feature(bigData,bigData.objects.counties));
 	},
 	set:function(data,cb){
 		var gj=topojson.feature(data,data.objects.counties);
-		this.rt.geoJSON(gj,function(err,data){
-			if(!err){
-				cb(gj);
-			}
-		});
+		if(this.bigData){
+			cb(gj);
+		}else{
+			this.rt.geoJSON(gj,function(err,data){
+				if(!err){
+					cb(gj);
+				}
+			});
+		}
 	},
 	bbox:function(data){return this.rt.bbox(data)}
 });
@@ -229,7 +234,7 @@ var counties = L.geoJson({features:[]},{
 }).addTo(m);
 //add it to the map
 layerControl.addOverlay(counties,"Counties");
-var geoJson,waiting;
+var geoJson;
 //download data to start us off
 $.when($.ajax('json/us-10m.json'),$.ajax({url:polys.urlBase,data:polys.params(),dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
 	vizes.data = a[0];
@@ -249,12 +254,10 @@ function updateMap(){
 			[bounds.getSouthWest().lng,bounds.getSouthWest().lat],
 			[bounds.getNorthEast().lng,bounds.getNorthEast().lat]
 		];
-	if(zoom<6){
+	if(zoom<7){
 		if(vizes.farOut){
-			console.log(1);
 			return;
 		}else{
-			console.log(2);
 			counties.clearLayers();
 			if(geoJson){
 				vizes.farOut=true;
@@ -264,10 +267,7 @@ function updateMap(){
 		}
 	}else{
 		if(vizes.farOut){
-			console.log(3);
 			vizes.farOut=false;
-		}else{
-			console.log(4);
 		}
 	}
 	rt.bbox(bbox).then(function(rData){
