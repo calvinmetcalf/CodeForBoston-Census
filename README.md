@@ -17,7 +17,7 @@ The data views are in the file `public/js/models.js` to add a new one you need t
 }
 ```
 
-this version is hosted so it can do more tricks, [check it out](http://data-otp.rhcloud.com/)
+this version is hosted so it can do more tricks, [check it out](http://data-otp.rhcloud.com/) or checkout [the client side only version](http://calvinmetcalf.github.io/CodeForBoston-Census) located on the gh-pages branch
 
 Made for [RHoK Boston - Day of Civic Hacking by](http://hackforchange.org/rhok-boston):
 * Calvin Metcalf
