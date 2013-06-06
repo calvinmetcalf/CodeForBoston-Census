@@ -7,7 +7,7 @@ kublai.use express.compress()
 kublai.use express.favicon('./lib/kublai.ico')
 kublai.use express.bodyParser()
 kublai.use express.logger('dev') 
-kublai.use(require('less-middleware')({ src: './public/style' }))
+#kublai.use(require('less-middleware')({ src: './public/style' }))
 kublai.use express.static('./public')
 kublai.get '/data/:year/:set', (req,res)->
 	request(
