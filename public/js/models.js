@@ -105,5 +105,18 @@ var items=[
 			}
 			return b;
 		}
+	},{
+		name:"Education (Didn't Graduate HS)",
+		tables:"B06009_002E,B06009_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ parseFloat(a[i][0])*100 / parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
 	}
 ];
