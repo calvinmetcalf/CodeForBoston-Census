@@ -17,4 +17,4 @@ The data views are in the file `public/js/models.js` to add a new one you need t
 }
 ```
 
-this version is hosted so it can do more tricks.
+this version is hosted so it can do more tricks, [check it out](http://data-otp.rhcloud.com/)
