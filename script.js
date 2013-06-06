@@ -184,13 +184,13 @@ var polys= new Polys({legend:legend});
 //set up webWorker
 var rt = makeRT({
 	initialize:function(){
-		importScripts('js/rtree.js','js/topojson.js','json/bigData.json');
+		importScripts('js/rtree.js','js/topojson.js','json/bigData.js');
 		this.rt=rTree();
 		this.rt.geoJSON(topojson.feature(bigData,bigData.objects.counties));
 	},
 	set:function(data,cb){
 		var gj=topojson.feature(data,data.objects.counties);
-		if(this.bigData){
+		if(typeof document === 'undefined'){
 			cb(gj);
 		}else{
 			this.rt.geoJSON(gj,function(err,data){
@@ -241,6 +241,7 @@ $.when($.ajax('json/us-10m.json'),$.ajax({url:polys.urlBase,data:polys.params(),
 	var rows = b[0];
 	polys.buildValues (rows);
 	rt.set(vizes.data).then(function(a){
+		console.log(a);
 		geoJson=a;
 		updateMap();
 	});
