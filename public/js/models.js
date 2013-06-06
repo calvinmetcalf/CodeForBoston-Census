@@ -80,7 +80,7 @@ var items=[
 		},
 		flip:true
 	},{
-		name:"Gender Ratio",
+		name:"Gender Ratio (Men per 100 Women)",
 		tables:"B01001_002E,B01001_026E",
 		transform:function(a)  {
 			var b = [];
@@ -93,7 +93,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Movement (different house from 1 year ago)",
+		name:"Movement (Moved in last year)",
 		tables:"B07001_001E,B07001_017E",
 		transform:function(a)  {
 			var b = [];

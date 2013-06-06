@@ -55,15 +55,11 @@
        }
     </style>
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-     
-      <script src="/js/html5shiv.js"></script>{5
-      
-    <![endif]-->
+    
 	<!--[if IE]>
+	<script src="/js/shim-bundle.js"></script>
 	<link rel="stylesheet" href="/leaflet/leaflet.ie.css" />
-	<link rel="stylesheet" href="/css/gh-fork-ribbon.ie.css" />
+	<link rel="stylesheet" href="/style/gh-fork-ribbon.ie.css" />
 	<![endif]-->
   </head>
 
@@ -80,7 +76,7 @@
           <a class="brand" href="#">Census Data</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-             <li></li><form class="navbar-form pull-left" id="searchForm"><select id="whichValue">
+             <li></li><form class="navbar-form pull-left" id="searchForm"><select class="span4" id="whichValue">
   
 </select></form></li>
             </ul>

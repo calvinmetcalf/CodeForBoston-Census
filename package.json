@@ -1,22 +1,16 @@
 {
-  "name": "OpenShift-Sample-App",
+  "name": "Census Data App",
   "version": "1.0.0",
-  "description": "OpenShift Sample Application",
-  "keywords": [
-    "OpenShift",
-    "Node.js",
-    "application",
-    "openshift"
-  ],
+  "description": "Census Data App",
   "author": {
-    "name": "OpenShift",
-    "email": "ramr@example.org",
-    "url": "http://openshift.redhat.com/"
+    "name": "Calvin Metcalf",
+    "email": "calvin.metcalf@gmail.com",
+    "url": "http://cwmma.tumblr.com/"
   },
-  "homepage": "http://openshift.redhat.com/",
+  "homepage": "http://data-otp.rhcloud.com/",
   "repository": {
     "type": "git",
-    "url": "https://gitub.com/openshift/crankcase"
+    "url": "https://github.com/calvinmetcalf/CodeForBoston-Census"
   },
   "engines": {
     "node": ">= 0.6.0",
@@ -27,7 +21,8 @@
     "coffee-script": "~1.6.2",
     "less-middleware": "~0.1.11",
     "mustache": "~0.7.2",
-    "request": "~2.21.0"
+    "request": "~2.21.0",
+    "uglify-js": "~2.3.6"
   },
   "devDependencies": {},
   "bundleDependencies": [],

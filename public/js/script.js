@@ -47,7 +47,11 @@ var Selector = Backbone.View.extend({
 	render:function(){
 		var path=vizes.findWhere({name:location.pathname.slice(1).replace(/-/g," ")});
 		if(!path){
-			history.replaceState({},"",'Percent-below-poverty-line');
+			if('replaceState' in history){
+				history.replaceState({},"",'Percent-below-poverty-line');
+			}else{
+				location.replace('/Percent-below-poverty-line')
+			}
 			path=vizes.findWhere({name:'Percent below poverty line'});
 		}
 		path.set("active",true);
@@ -58,11 +62,14 @@ var selector = new Selector();
 selector.render();
 
 var Legend = Backbone.View.extend({
-	template:Mustache.compile('<strong>Legend</strong><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul>'),
+	template:Mustache.compile('<div class="span2"><div class="text-center"><strong>{{{current}}}</strong></div><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul></div>'),
 	render:function(){
 		var cur = vizes.findWhere({name:$('#whichValue').val()});
 		var vals = this.scale.quantiles().map(function(a,i){return {value:cur.get("stringRep")(a),color:colorbrewer.RdYlBu[11][!cur.get('flip')?10-i:i]}});
-		this.$el.html(this.template({items:vals}));
+		this.$el.html(this.template({
+			items:vals,
+			current:vizes.findWhere({name:$('#whichValue').val()}).get('name').replace(/\(/,'<br/>(')
+		}));
 	},collection:vizes,
 	initialize:function(){
 		this.collection.on('renderLegend',function(){this.render()},this);
@@ -138,7 +145,11 @@ var Polys = Backbone.View.extend({
 		if(hash[0]!=='#'){
 			hash = '#'+hash;
 		}
-		history.pushState({},"",self.current().replace(/\s/g,"-")+hash);
+		if('pushState' in history){
+			history.pushState({},"",self.current().replace(/\s/g,"-")+hash);
+		}else{
+			location.assign(self.current().replace(/\s/g,"-")+hash);
+		}
 		$.ajax({url:polys.urlBase,data:polys.params()/*,dataType:'jsonp',jsonp:'jsonp',cache:true*/}).then(function(a){
 			self.buildValues( a);
 			self.collection.farOut=false;
@@ -239,8 +250,8 @@ var counties = L.geoJson({features:[]},{
 	}
 }).addTo(m);
 //add it to the map
-layerControl.addOverlay(counties,"Counties");
-var geoJson,waiting;
+
+var geoJson;
 //download data to start us off
 $.when($.ajax('json/us-10m.json'),$.ajax({url:polys.urlBase,data:polys.params()/*,dataType:'jsonp',jsonp:'jsonp',cache:true*/})).then(function(a,b){
 	vizes.data = a[0];
@@ -262,11 +273,11 @@ function updateMap(){
 		];
 	if(zoom<6){
 		if(vizes.farOut){
-			console.log(1);
+			//console.log(1);
 			return;
 		}else{
 			console.log(2);
-			counties.clearLayers();
+			//counties.clearLayers();
 			if(geoJson){
 				vizes.farOut=true;
 				counties.addData(geoJson);
@@ -275,10 +286,10 @@ function updateMap(){
 		}
 	}else{
 		if(vizes.farOut){
-			console.log(3);
+			//console.log(3);
 			vizes.farOut=false;
 		}else{
-			console.log(4);
+			//console.log(4);
 		}
 	}
 	rt.bbox(bbox).then(function(rData){
