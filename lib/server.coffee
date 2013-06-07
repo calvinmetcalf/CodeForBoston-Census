@@ -4,7 +4,7 @@ request = require 'request'
 xml2js = require 'xml2js'
 parser = new xml2js.Parser()
 index=fs.readFileSync './index.html','utf8'
-docs={'2011':{},'2010':{}}
+docs={'2011':{'counties':{}},'2010':{'counties':{}}}
 transform = require './transform'
 kublai = express()
 kublai.use express.compress()
@@ -13,11 +13,22 @@ kublai.use express.bodyParser()
 kublai.use express.logger('dev') 
 #kublai.use(require('less-middleware')({ src: './public/style' }))
 kublai.use express.static('./public')
-kublai.get '/data/:year/:set', (req,res)->
-	request(
+kublai.get '/data/:year/:set/counties/:tables', (req,res)->
+	if docs[req.params.year].counties[req.params.tables]
+		res.jsonp docs[req.params.year].counties[req.params.tables]
+		return true
+	qs = 
+		'for':'county:*'
+		'in':'state:*'
+		'key':'0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f'
+		'get':req.params.tables
+	request {
 		url:"http://api.census.gov/data/#{req.params.year}/#{req.params.set}"
-		qs:req.query
-		).pipe res
+		qs:qs
+		json:true
+	},(e,r,b)->
+		docs[req.params.year].counties[req.params.tables]=b
+		res.jsonp b
 kublai.get '/docs/:year/:set',(req,res)->
 	if docs[req.params.year][req.params.set]
 		res.jsonp docs[req.params.year][req.params.set]
