@@ -272,8 +272,8 @@ function updateMap(){
 			//console.log(1);
 			return;
 		}else{
-			console.log(2);
-			//counties.clearLayers();
+			//console.log(2);
+			counties.clearLayers();
 			if(geoJson){
 				vizes.farOut=true;
 				counties.addData(geoJson);

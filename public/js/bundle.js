@@ -2906,6 +2906,71 @@ var items=[
 	},{
 		name:"Avg Hours Worked",
 		tables:"B23020_001E"
+	},{
+		name:"Whitest",
+		tables:"B02001_002E,B02001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ parseFloat(a[i][0])*10000/ parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
+	},{
+		name:"Blackest",
+		tables:"B02001_003E,B02001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ parseFloat(a[i][0])*10000/ parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
+	},{
+		name:"Most Asian",
+		tables:"B02001_005E,B02001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ parseFloat(a[i][0])*10000/ parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
+	},{
+		name:"Most Native American",
+		tables:"B02001_004E,B02001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ parseFloat(a[i][0])*10000/ parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
+	},{
+		name:"Most Mixed Race",
+		tables:"B02001_008E,B02001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ parseFloat(a[i][0])*10000/ parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
 	}
 ];
 
@@ -3183,8 +3248,8 @@ function updateMap(){
 			//console.log(1);
 			return;
 		}else{
-			console.log(2);
-			//counties.clearLayers();
+			//console.log(2);
+			counties.clearLayers();
 			if(geoJson){
 				vizes.farOut=true;
 				counties.addData(geoJson);
