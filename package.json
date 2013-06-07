@@ -1,0 +1,32 @@
+{
+  "name": "Census-Data-App",
+  "version": "1.0.0",
+  "description": "Census Data App",
+  "author": {
+    "name": "Calvin Metcalf",
+    "email": "calvin.metcalf@gmail.com",
+    "url": "http://cwmma.tumblr.com/"
+  },
+  "homepage": "http://data-otp.rhcloud.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/calvinmetcalf/CodeForBoston-Census"
+  },
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
+  },
+  "dependencies": {
+    "express": "*",
+    "coffee-script": "~1.6.2",
+    "less-middleware": "~0.1.11",
+    "mustache": "~0.7.2",
+    "request": "~2.21.0",
+    "uglify-js": "~2.3.6",
+    "xml2js": "~0.2.7"
+  },
+  "devDependencies": {},
+  "bundleDependencies": [],
+  "private": true,
+  "main": "server.js"
+}
