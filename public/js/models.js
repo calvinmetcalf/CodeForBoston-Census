@@ -13,8 +13,13 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Income",
+		name:"Median Household Income",
 		tables:"B19013_001E",
+		flip:true
+		
+	},{
+		name:"Per capita income",
+		tables:"B19301_001E",
 		flip:true
 		
 	},{
@@ -24,7 +29,7 @@ var items=[
 			return  parseFloat(a,10).toPrecision(5);
 		}
 	},{
-		name:"Mean Commute",
+		name:"Avg Commute",
 		tables:"B08131_001E,B08122_001E",
 		transform: function(a) {
 			var b = [];
@@ -93,7 +98,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Movement (Moved in last year)",
+		name:"Movement (Percent Moved in last year)",
 		tables:"B07001_001E,B07001_017E",
 		transform:function(a)  {
 			var b = [];
@@ -118,5 +123,46 @@ var items=[
 			}
 			return b;
 		}
+	},{
+		name:"Rent as Percentage of Income",
+		tables:"B25071_001E"
+		
+	},{
+		name:'Rooms per House',
+		tables:"B25018_001E",
+		stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(2);
+		},
+		flip:true
+	},{
+		name:"Age of Structures (years)",
+		tables:"B25035_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			var currentYear = (new Date()).getFullYear();
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ currentYear-parseFloat(a[i][0]), a[i][1], a[i][2]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
+	},{
+		name:"Houses Without Bathrooms (Per 10000)",
+		tables:"B25048_003E,B25048_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ parseFloat(a[i][0])*10000 / parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
+	},{
+		name:"Avg Hours Worked",
+		tables:"B23020_001E"
 	}
 ];
