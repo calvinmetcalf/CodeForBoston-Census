@@ -232,5 +232,18 @@ var items=[
 			}
 			return b;
 		}
+	},{
+		name:"Non Existent Nationalities (Czechoslovakian plus Yugoslavian)",
+		tables:"B04001_107E,B04001_032E,B04001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ (parseFloat(a[i][0])+parseFloat(a[i][1]))*100000/ parseFloat(a[i][2]), a[i][3], a[i][4]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
 	}
 ];

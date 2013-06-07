@@ -2974,6 +2974,19 @@ var items=[
 			}
 			return b;
 		}
+	},{
+		name:"Non Existent Nationalities (Czechoslovakian plus Yugoslavian)",
+		tables:"B04001_107E,B04001_032E,B04001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ (parseFloat(a[i][0])+parseFloat(a[i][1]))*100000/ parseFloat(a[i][2]), a[i][3], a[i][4]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
 	}
 ];
 
@@ -3093,17 +3106,6 @@ var Polys = Backbone.View.extend({
 			} else {
 				rows=oRows;
 			}
-		if(rows[0].length===4){
-			console.log(4);
-			_.each(rows,function(r){
-				var val = parseFloat(r[0],10);
-				self.obj[r[2]+r[3]]=val;
-				if(val){
-					vals.push(val);
-				}
-			});
-		}else if(rows[0].length===3){
-			console.log(3);
 			_.each(rows,function(r){
 			var val = parseFloat(r[0],10);
 				self.obj[r[1]+r[2]]=val;
@@ -3111,7 +3113,7 @@ var Polys = Backbone.View.extend({
 					vals.push(val);
 				}
 			});
-		}
+		
 		self.options.legend.scale.domain(vals);
 		self.collection.trigger('renderLegend');
 	},
