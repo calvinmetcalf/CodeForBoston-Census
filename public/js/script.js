@@ -114,15 +114,6 @@ var Polys = Backbone.View.extend({
 			} else {
 				rows=oRows;
 			}
-		if(rows[0].length===4){
-			_.each(rows,function(r){
-				var val = parseFloat(r[0],10);
-				self.obj[r[2]+r[3]]=val;
-				if(val){
-					vals.push(val);
-				}
-			});
-		}else if(rows[0].length===3){
 			_.each(rows,function(r){
 			var val = parseFloat(r[0],10);
 				self.obj[r[1]+r[2]]=val;
@@ -130,7 +121,7 @@ var Polys = Backbone.View.extend({
 					vals.push(val);
 				}
 			});
-		}
+		
 		self.options.legend.scale.domain(vals);
 		self.collection.trigger('renderLegend');
 	},

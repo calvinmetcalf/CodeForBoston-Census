@@ -163,7 +163,10 @@ var items=[
 		}
 	},{
 		name:"Avg Hours Worked",
-		tables:"B23020_001E"
+		tables:"B23020_001E",
+		stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4);
+		}
 	},{
 		name:"Whitest",
 		tables:"B02001_002E,B02001_001E",

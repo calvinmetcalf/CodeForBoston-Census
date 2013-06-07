@@ -2905,7 +2905,10 @@ var items=[
 		}
 	},{
 		name:"Avg Hours Worked",
-		tables:"B23020_001E"
+		tables:"B23020_001E",
+		stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4);
+		}
 	},{
 		name:"Whitest",
 		tables:"B02001_002E,B02001_001E",
@@ -3091,6 +3094,7 @@ var Polys = Backbone.View.extend({
 				rows=oRows;
 			}
 		if(rows[0].length===4){
+			console.log(4);
 			_.each(rows,function(r){
 				var val = parseFloat(r[0],10);
 				self.obj[r[2]+r[3]]=val;
@@ -3099,6 +3103,7 @@ var Polys = Backbone.View.extend({
 				}
 			});
 		}else if(rows[0].length===3){
+			console.log(3);
 			_.each(rows,function(r){
 			var val = parseFloat(r[0],10);
 				self.obj[r[1]+r[2]]=val;
