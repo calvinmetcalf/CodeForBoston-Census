@@ -72,6 +72,7 @@ var Polys = Backbone.View.extend({
 	current : function(){return this.$el.val()},
 	collection:vizes,
 	obj:{},
+	farOut:false,
 	style:function(id){
 		if(!this.obj[id]){
 			return;
@@ -129,6 +130,7 @@ var Polys = Backbone.View.extend({
 		var self = this;
 		$.ajax({url:polys.urlBase,data:polys.params(),dataType:'jsonp',jsonp:'jsonp',cache:true}).then(function(a){
 			self.buildValues( a);
+			self.collection.farOut=false;
 			updateMap();
 		});
 	}
@@ -186,11 +188,12 @@ var rt = makeRT({
 		this.rt=rTree();
 	},
 	set:function(data,cb){
-		this.rt.geoJSON(topojson.feature(data,data.objects.counties),function(err,data){
+		var gj=topojson.feature(data,data.objects.counties);
+		this.rt.geoJSON(gj,function(err,data){
 			if(!err){
-				cb(true);
+				cb(gj);
 			}
-		})
+		});
 	},
 	bbox:function(data){return this.rt.bbox(data)}
 });
@@ -226,13 +229,14 @@ var counties = L.geoJson({features:[]},{
 }).addTo(m);
 //add it to the map
 layerControl.addOverlay(counties,"Counties");
-
+var geoJson,waiting;
 //download data to start us off
 $.when($.ajax('json/us-10m.json'),$.ajax({url:polys.urlBase,data:polys.params(),dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
 	vizes.data = a[0];
 	var rows = b[0];
 	polys.buildValues (rows);
-	rt.set(vizes.data).then(function(){
+	rt.set(vizes.data).then(function(a){
+		geoJson=a;
 		updateMap();
 	});
 });
@@ -240,12 +244,33 @@ $.when($.ajax('json/us-10m.json'),$.ajax({url:polys.urlBase,data:polys.params(),
 m.on("contextmenu moveend",updateMap);
 function updateMap(){
 	var bounds = m.getBounds();
-	rt.bbox(
-		[
+	var zoom = m.getZoom();
+	var bbox = [
 			[bounds.getSouthWest().lng,bounds.getSouthWest().lat],
 			[bounds.getNorthEast().lng,bounds.getNorthEast().lat]
-		]
-	).then(function(rData){
+		];
+	if(zoom<6){
+		if(vizes.farOut){
+			console.log(1);
+			return;
+		}else{
+			console.log(2);
+			counties.clearLayers();
+			if(geoJson){
+				vizes.farOut=true;
+				counties.addData(geoJson);
+			}
+			return;
+		}
+	}else{
+		if(vizes.farOut){
+			console.log(3);
+			vizes.farOut=false;
+		}else{
+			console.log(4);
+		}
+	}
+	rt.bbox(bbox).then(function(rData){
 		counties.clearLayers();
 		counties.addData(rData);
 	});

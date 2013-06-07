@@ -92,5 +92,18 @@ var items=[
 			}
 			return b;
 		}
+	},{
+		name:"Movement (different house from 1 year ago)",
+		tables:"B07001_001E,B07001_017E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [ (parseFloat(a[i][0])-parseFloat(a[i][1]))*100 / parseFloat(a[i][0]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		}
 	}
 ];
