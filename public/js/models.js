@@ -182,7 +182,7 @@ var items=[
 			return  parseFloat(a,10).toPrecision(4);
 		}
 	},{
-		name:"Whitest",
+		name:"Whitest (White People per 10k)",
 		tables:"B02001_002E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -195,7 +195,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Blackest",
+		name:"Blackest (Black People per 10k)",
 		tables:"B02001_003E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -208,7 +208,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Most Asian",
+		name:"Asians per 10K",
 		tables:"B02001_005E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -221,7 +221,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Most Native American",
+		name:"Native American per 10K",
 		tables:"B02001_004E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -234,7 +234,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Most Mixed Race",
+		name:"Mixed Race People per 10K",
 		tables:"B02001_008E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -247,7 +247,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Non Existent Nationalities (Czechoslovakian, Yugoslavian, and Soviet Union)",
+		name:"Non Existent Nationalities (Czechoslovakian, Yugoslavian, and Soviet Union per 100K)",
 		tables:"B04001_107E,B04001_032E,B04001_072E,B04001_001E",
 		transform:function(a)  {
 			var b = [];
