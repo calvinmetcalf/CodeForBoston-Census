@@ -2827,6 +2827,20 @@ var items=[
 		},
 		flip:true
 	},{
+		name:"LPM (Luxemburger Per Million)",
+		tables:"B04001_054E,B04001_001E",
+		transform:function(a)  {
+			var b = [];
+			var ct,i,len;
+			for (i = 0,len=a.length; i < len; i++) {
+				ct = [parseFloat(a[i][0])*1000000 / parseFloat(a[i][1]), a[i][2], a[i][3]];
+				ct[0] = ct[0]|0;
+				b.push(ct);
+			}
+			return b;
+		},
+		flip:true
+	},{
 		name:"Gender Ratio (Men per 100 Women)",
 		tables:"B01001_002E,B01001_026E",
 		transform:function(a)  {
@@ -2975,13 +2989,13 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Non Existent Nationalities (Czechoslovakian plus Yugoslavian)",
-		tables:"B04001_107E,B04001_032E,B04001_001E",
+		name:"Non Existent Nationalities (Czechoslovakian, Yugoslavian, and Soviet Union)",
+		tables:"B04001_107E,B04001_032E,B04001_072E,B04001_001E",
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
 			for (i = 0,len=a.length; i < len; i++) {
-				ct = [ (parseFloat(a[i][0])+parseFloat(a[i][1]))*100000/ parseFloat(a[i][2]), a[i][3], a[i][4]];
+				ct = [ (parseFloat(a[i][0])+parseFloat(a[i][1])+parseFloat(a[i][2]))*100000/ parseFloat(a[i][3]), a[i][4], a[i][5]];
 				ct[0] = ct[0]|0;
 				b.push(ct);
 			}
