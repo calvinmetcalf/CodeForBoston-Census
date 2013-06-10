@@ -13,6 +13,9 @@ kublai.use express.bodyParser()
 kublai.use express.logger('dev') 
 #kublai.use(require('less-middleware')({ src: './public/style' }))
 kublai.use express.static('./public')
+
+
+
 #kublai.set 'json spaces',0
 kublai.get '/data/:year/:set/counties/:tables', (req,res)->
 	if docs[req.params.year].counties[req.params.tables]

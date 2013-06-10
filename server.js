@@ -1,5 +1,5 @@
 require('coffee-script');
-require('./build')();
+require('./build')(function(){
 var cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
 
@@ -18,3 +18,4 @@ if (cluster.isMaster) {
   // In this case its a HTTP server
   require('./lib/server.coffee');
 }
+});

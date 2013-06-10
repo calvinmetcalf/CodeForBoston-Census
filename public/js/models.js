@@ -2,6 +2,9 @@ var items=[
 	{
 		name:"Percent below poverty line",
 		tables:"B17001_002E,B17001_001E",
+		t:function(a){
+			return [ parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -31,6 +34,10 @@ var items=[
 	},{
 		name:"Avg Commute",
 		tables:"B08131_001E,B08122_001E",
+		t:function(a){
+
+			return [parseFloat(a[0]) / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform: function(a) {
 			var b = [];
 			var ct,i,len;
@@ -44,6 +51,10 @@ var items=[
 	},{
 		name:"Income Car Vs Trans",
 		tables:"B08121_002E,B08121_004E",
+		t:function(a){
+
+			return [parseFloat(a[0]) - parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a) {
 			var b = [],i,ct,len;
 			for (i = 0,len=a.length; i < len; i++) {
@@ -57,6 +68,10 @@ var items=[
 	},{
 		name:"Percent on foodstamps",
 		tables:"B22007_002E,B22007_001E",
+		t:function(a){
+
+			return [ parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -73,6 +88,10 @@ var items=[
 	},{
 		name:"Most Welsh (Welsh per 10,000)",
 		tables:"B04001_093E,B04001_001E",
+		t:function(a){
+
+			return [ parseFloat(a[0])*10000 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -87,6 +106,10 @@ var items=[
 	},{
 		name:"LPM (Luxemburger Per Million)",
 		tables:"B04001_054E,B04001_001E",
+		t:function(a){
+
+			return [ parseFloat(a[0])*1000000 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -101,6 +124,10 @@ var items=[
 	},{
 		name:"Gender Ratio (Men per 100 Women)",
 		tables:"B01001_002E,B01001_026E",
+		t:function(a){
+
+			return [ parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -114,6 +141,10 @@ var items=[
 	},{
 		name:"Movement (Percent Moved in last year)",
 		tables:"B07001_001E,B07001_017E",
+		t:function(a){
+
+			return [  (parseFloat(a[0])-parseFloat(a[1]))*100 / parseFloat(a[i][0]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -127,6 +158,10 @@ var items=[
 	},{
 		name:"Education (Didn't Graduate HS)",
 		tables:"B06009_002E,B06009_001E",
+		t:function(a){
+
+			return [ parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -150,6 +185,10 @@ var items=[
 		flip:true
 	},{
 		name:"Age of Structures (years)",
+		t:function(a){
+			var currentYear = (new Date()).getFullYear();
+			return [ currentYear-parseFloat(a[0]), a[1], a[2]];
+		},
 		tables:"B25035_001E",
 		transform:function(a)  {
 			var b = [];
@@ -165,6 +204,9 @@ var items=[
 	},{
 		name:"Houses Without Bathrooms (Per 10000)",
 		tables:"B25048_003E,B25048_001E",
+		t:function(a){
+			return [parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -184,6 +226,9 @@ var items=[
 	},{
 		name:"Whitest (White People per 10k)",
 		tables:"B02001_002E,B02001_001E",
+		t:function(a){
+			return [parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -197,6 +242,9 @@ var items=[
 	},{
 		name:"Blackest (Black People per 10k)",
 		tables:"B02001_003E,B02001_001E",
+		t:function(a){
+			return [parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -210,6 +258,9 @@ var items=[
 	},{
 		name:"Asians per 10K",
 		tables:"B02001_005E,B02001_001E",
+		t:function(a){
+			return [parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -223,6 +274,9 @@ var items=[
 	},{
 		name:"Native American per 10K",
 		tables:"B02001_004E,B02001_001E",
+		t:function(a){
+			return [parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -236,6 +290,9 @@ var items=[
 	},{
 		name:"Mixed Race People per 10K",
 		tables:"B02001_008E,B02001_001E",
+		t:function(a){
+			return [parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -249,6 +306,9 @@ var items=[
 	},{
 		name:"Non Existent Nationalities (Czechoslovakian, Yugoslavian, and Soviet Union per 100K)",
 		tables:"B04001_107E,B04001_032E,B04001_072E,B04001_001E",
+		t:function(a){
+			return [(parseFloat(a[0])+parseFloat(a[1])+parseFloat(a[2]))*100000/ parseFloat(a[3]), a[4], a[5]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -261,3 +321,6 @@ var items=[
 		}
 	}
 ];
+if(typeof module !== 'undefined'){
+	module.exports=items;
+}
