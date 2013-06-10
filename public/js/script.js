@@ -29,7 +29,7 @@ var Viz = Backbone.Model.extend({
 	defaults: {
 		transform:false,
 		stringRep:function(a){
-				return  parseInt(a,10).toString(10);
+				return  parseInt(a,10).toString(10).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 			}
 	}
 });
@@ -66,11 +66,36 @@ var Legend = Backbone.View.extend({
 	template:Mustache.compile('<div class="span2"><div class="text-center"><strong>{{{current}}}</strong></div><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul></div>'),
 	render:function(){
 		var cur = vizes.findWhere({name:$('#whichValue').val()});
-		var vals = this.scale.quantiles().map(function(a,i){return {value:cur.get("stringRep")(a),color:colorbrewer.RdYlBu[11][!cur.get('flip')?10-i:i]}});
+		var sc = this.scale.quantiles();
+		sc.push(sc[9]+1);
+		mapFunc=function(a,i){
+			var flip = cur.get('flip');
+			var out =  {};
+			console.log(i);
+			if(i===0){
+				out.value="<"+cur.get("stringRep")(sc[1]);
+			}else if(i===10){
+				out.value=">"+cur.get("stringRep")(a);
+			}else{
+				out.value=cur.get("stringRep")(a) + " - "+ cur.get("stringRep")(sc[i+1]);
+			}
+			
+			out.color=colorbrewer.RdBu[11][!flip?10-i:i];
+			if(flip){
+				
+			}
+			return out;
+		};
+		var vals = sc.map(mapFunc);
+			if(cur.get('flip')){
+				vals.reverse();
+			}
 		this.$el.html(this.template({
 			items:vals,
+			flip:cur.get('flip'),
 			current:vizes.findWhere({name:$('#whichValue').val()}).get('name').replace(/\(/,'<br/>(')
 		}));
+		sc.pop();
 	},collection:vizes,
 	initialize:function(){
 		this.collection.on('renderLegend',function(){this.render()},this);
@@ -91,9 +116,9 @@ var Polys = Backbone.View.extend({
 			return;
 		}
 		if(!this.collection.findWhere({name:this.current()}).get('flip')){
-			return colorbrewer.RdYlBu[11][10-this.options.legend.scale(this.obj[id])];
+			return colorbrewer.RdBu[11][10-this.options.legend.scale(this.obj[id])];
 		}else{
-			return colorbrewer.RdYlBu[11][this.options.legend.scale(this.obj[id])];
+			return colorbrewer.RdBu[11][this.options.legend.scale(this.obj[id])];
 		}
 			
 	},

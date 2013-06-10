@@ -26,7 +26,7 @@ var items=[
 		name:"Inequality",
 		tables:"B19083_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(5);
+			return  parseFloat(a,10).toPrecision(5).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		}
 	},{
 		name:"Avg Commute",
@@ -145,7 +145,7 @@ var items=[
 		name:'Rooms per House',
 		tables:"B25018_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(2);
+			return  parseFloat(a,10).toPrecision(2).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		},
 		flip:true
 	},{
@@ -179,7 +179,7 @@ var items=[
 		name:"Avg Hours Worked",
 		tables:"B23020_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(4);
+			return  parseFloat(a,10).toPrecision(4).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		}
 	},{
 		name:"Whitest (White People per 10k)",

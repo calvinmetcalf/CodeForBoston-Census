@@ -2768,7 +2768,7 @@ var items=[
 		name:"Inequality",
 		tables:"B19083_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(5);
+			return  parseFloat(a,10).toPrecision(5).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		}
 	},{
 		name:"Avg Commute",
@@ -2887,7 +2887,7 @@ var items=[
 		name:'Rooms per House',
 		tables:"B25018_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(2);
+			return  parseFloat(a,10).toPrecision(2).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		},
 		flip:true
 	},{
@@ -2921,10 +2921,10 @@ var items=[
 		name:"Avg Hours Worked",
 		tables:"B23020_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(4);
+			return  parseFloat(a,10).toPrecision(4).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		}
 	},{
-		name:"Whitest",
+		name:"Whitest (White People per 10k)",
 		tables:"B02001_002E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -2937,7 +2937,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Blackest",
+		name:"Blackest (Black People per 10k)",
 		tables:"B02001_003E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -2950,7 +2950,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Most Asian",
+		name:"Asians per 10K",
 		tables:"B02001_005E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -2963,7 +2963,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Most Native American",
+		name:"Native American per 10K",
 		tables:"B02001_004E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -2976,7 +2976,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Most Mixed Race",
+		name:"Mixed Race People per 10K",
 		tables:"B02001_008E,B02001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -2989,7 +2989,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Non Existent Nationalities (Czechoslovakian, Yugoslavian, and Soviet Union)",
+		name:"Non Existent Nationalities (Czechoslovakian, Yugoslavian, and Soviet Union per 100K)",
 		tables:"B04001_107E,B04001_032E,B04001_072E,B04001_001E",
 		transform:function(a)  {
 			var b = [];
@@ -3035,7 +3035,7 @@ var Viz = Backbone.Model.extend({
 	defaults: {
 		transform:false,
 		stringRep:function(a){
-				return  parseInt(a,10).toString(10);
+				return  parseInt(a,10).toString(10).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 			}
 	}
 });
@@ -3072,11 +3072,36 @@ var Legend = Backbone.View.extend({
 	template:Mustache.compile('<div class="span2"><div class="text-center"><strong>{{{current}}}</strong></div><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul></div>'),
 	render:function(){
 		var cur = vizes.findWhere({name:$('#whichValue').val()});
-		var vals = this.scale.quantiles().map(function(a,i){return {value:cur.get("stringRep")(a),color:colorbrewer.RdYlBu[11][!cur.get('flip')?10-i:i]}});
+		var sc = this.scale.quantiles();
+		sc.push(sc[9]+1);
+		mapFunc=function(a,i){
+			var flip = cur.get('flip');
+			var out =  {};
+			console.log(i);
+			if(i===0){
+				out.value="<"+cur.get("stringRep")(sc[1]);
+			}else if(i===10){
+				out.value=">"+cur.get("stringRep")(a);
+			}else{
+				out.value=cur.get("stringRep")(a) + " - "+ cur.get("stringRep")(sc[i+1]);
+			}
+			
+			out.color=colorbrewer.RdBu[11][!flip?10-i:i];
+			if(flip){
+				
+			}
+			return out;
+		};
+		var vals = sc.map(mapFunc);
+			if(cur.get('flip')){
+				vals.reverse();
+			}
 		this.$el.html(this.template({
 			items:vals,
+			flip:cur.get('flip'),
 			current:vizes.findWhere({name:$('#whichValue').val()}).get('name').replace(/\(/,'<br/>(')
 		}));
+		sc.pop();
 	},collection:vizes,
 	initialize:function(){
 		this.collection.on('renderLegend',function(){this.render()},this);
@@ -3097,9 +3122,9 @@ var Polys = Backbone.View.extend({
 			return;
 		}
 		if(!this.collection.findWhere({name:this.current()}).get('flip')){
-			return colorbrewer.RdYlBu[11][10-this.options.legend.scale(this.obj[id])];
+			return colorbrewer.RdBu[11][10-this.options.legend.scale(this.obj[id])];
 		}else{
-			return colorbrewer.RdYlBu[11][this.options.legend.scale(this.obj[id])];
+			return colorbrewer.RdBu[11][this.options.legend.scale(this.obj[id])];
 		}
 			
 	},
