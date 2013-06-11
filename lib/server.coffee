@@ -13,13 +13,11 @@ kublai.use express.bodyParser()
 kublai.use express.logger('dev') 
 #kublai.use(require('less-middleware')({ src: './public/style' }))
 kublai.use express.static('./public')
-kublai.all '/', (req, res, next)->
-	res.header "Access-Control-Allow-Origin", "*"
-	res.header "Access-Control-Allow-Headers", "X-Requested-With"
-	next()
 	
 #kublai.set 'json spaces',0
-kublai.get '/data/:year/:set/counties/:tables', (req,res,next)->
+kublai.get '/data/:year/:set/counties/:tables', (req,res)->
+	res.header "Access-Control-Allow-Origin", "*"
+	res.header "Access-Control-Allow-Headers", "X-Requested-With"
 	if docs[req.params.year].counties[req.params.tables]
 		res.jsonp docs[req.params.year].counties[req.params.tables]
 		return true
