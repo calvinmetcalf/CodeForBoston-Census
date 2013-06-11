@@ -19,7 +19,7 @@ kublai.all '/', (req, res, next)->
 	next()
 	
 #kublai.set 'json spaces',0
-kublai.get '/data/:year/:set/counties/:tables', (req,res)->
+kublai.get '/data/:year/:set/counties/:tables', (req,res,next)->
 	if docs[req.params.year].counties[req.params.tables]
 		res.jsonp docs[req.params.year].counties[req.params.tables]
 		return true
