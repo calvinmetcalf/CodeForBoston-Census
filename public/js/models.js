@@ -147,6 +147,26 @@ var items=[
 			return b;
 		}
 	},{
+		name:"Gender Wage Ratio (Female Wages per $100 Male)",
+		tables:"B20002_002E,B20002_003E",
+		translate:function(a){
+			return [parseFloat(a[1])*100 / parseFloat(a[0]), a[2], a[3]];
+		},
+		flip:true,
+		stringRep:function(a){
+			return  "$"+parseFloat(a,10).toPrecision(4);
+		}
+	},{
+		name:"Veteran Wage Ratio (Veteran Wages per $100 Nonveteran)",
+		tables:"B21004_007E,B21004_004E",
+		translate:function(a){
+			return [parseFloat(a[1])*100 / parseFloat(a[0]), a[2], a[3]];
+		},
+		flip:true,
+		stringRep:function(a){
+			return  "$"+parseFloat(a,10).toPrecision(4);
+		}
+	},{
 		name:"Moved in Last Year",
 		tables:"B07001_001E,B07001_017E",
 		
