@@ -202,7 +202,7 @@ function makeRT(obj){
 //map stuff
 var m = L.map('map');
 if(!location.hash){
-	m.setView([42.076,-71.505], 8);
+	m.setView(39.555,-91.187], 5);
 }
 m.addHash();
 var MyControl = L.Control.extend({
