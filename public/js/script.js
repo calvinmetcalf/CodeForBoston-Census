@@ -27,7 +27,7 @@ L.Control.Layers.prototype._addItem= function (obj) {
 
 var Viz = Backbone.Model.extend({
 	defaults: {
-		transform:false,
+		translate:false,
 		stringRep:function(a){
 				return  parseInt(a,10).toString(10).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 			}
@@ -71,7 +71,6 @@ var Legend = Backbone.View.extend({
 		mapFunc=function(a,i){
 			var flip = cur.get('flip');
 			var out =  {};
-			console.log(i);
 			if(i===0){
 				out.value="<"+cur.get("stringRep")(sc[1]);
 			}else if(i===10){
@@ -111,6 +110,9 @@ var Polys = Backbone.View.extend({
 	collection:vizes,
 	obj:{},
 	farOut:false,
+	stRep : function(){
+		return this.collection.findWhere({name:this.current()}).get('stringRep');
+	},
 	style:function(id){
 		if(!this.obj[id]){
 			return;
@@ -132,19 +134,27 @@ var Polys = Backbone.View.extend({
 		var self=this;
 		var vals = [];
 		var metric = this.current();
-		var rows;
-		var transform = self.collection.findWhere({name:metric}).get('transform');
-			if (transform) {
-				rows=transform(oRows);
-			} else {
-				rows=oRows;
-			}
-			_.each(rows,function(r){
-			var val = parseFloat(r[0],10);
-				self.obj[r[1]+r[2]]=val;
-				if(val){
-					vals.push(val);
+		//var rows;
+		var translate = self.collection.findWhere({name:metric}).get('translate');
+			//if (translate) {
+			//	rows=_.map(oRows,translate);
+			//} else {
+		//		rows=oRows;
+		//	}
+			//console.log(rows);
+			_.each(oRows,function(row){
+				var r;
+				if (translate) {
+					r=translate(row);
+				} else {
+					r=row;
 				}
+				//console.log(r,row);
+				var val = parseFloat(r[0],10);
+					self.obj[r[1]+r[2]]=val;
+					if(val){
+						vals.push(val);
+					}
 			});
 		
 		self.options.legend.scale.domain(vals);
@@ -237,6 +247,7 @@ var counties = L.geoJson({features:[]},{
 		var out = [];
 		if (f.properties){
 			for(var key in f.properties){
+				console.log(f.properties[key]);
 				out.push(key+": "+f.properties[key]);
 			}
 		}	
@@ -244,8 +255,9 @@ var counties = L.geoJson({features:[]},{
 		if(id.length === 4){
 			id = '0'+id;
 		}
+		var strep = polys.stRep();
 		if(polys.obj[id]){
-			out.push(polys.current()+': '+polys.obj[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+			out.push(polys.current()+': '+strep(polys.obj[id]));
 		}
 		out.push("name: "+cNames[id]);
 		l.bindPopup(out.join("<br />"));

@@ -1,7 +1,13 @@
 var items=[
 	{
-		name:"Percent below poverty line",
+		name:"Below Poverty Line",
 		tables:"B17001_002E,B17001_001E",
+		translate:function(a){
+			return [parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]]
+		},
+		stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4) +"%";
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -15,22 +21,31 @@ var items=[
 	},{
 		name:"Median Household Income",
 		tables:"B19013_001E",
-		flip:true
+		flip:true,
+		stringRep:function(a){
+				return  "$"+parseInt(a,10).toString(10).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
+			}
 		
 	},{
 		name:"Per capita income",
 		tables:"B19301_001E",
-		flip:true
+		flip:true,
+		stringRep:function(a){
+				return  "$"+parseInt(a,10).toString(10).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
+			}
 		
 	},{
 		name:"Inequality",
 		tables:"B19083_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(5).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
+			return  parseFloat(a,10).toPrecision(4);
 		}
 	},{
-		name:"Avg Commute",
+		name:"Avg Commute (One Way)",
 		tables:"B08131_001E,B08122_001E",
+		translate:function(a){
+			return [parseFloat(a[0]) / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform: function(a) {
 			var b = [];
 			var ct,i,len;
@@ -44,6 +59,9 @@ var items=[
 	},{
 		name:"Income Car Vs Trans",
 		tables:"B08121_002E,B08121_004E",
+		translate:function(a){
+			return [parseFloat(a[0]) - parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a) {
 			var b = [],i,ct,len;
 			for (i = 0,len=a.length; i < len; i++) {
@@ -53,10 +71,16 @@ var items=[
 			}
 			return b;
 		},
-		flip:true
+		flip:true,
+		stringRep:function(a){
+				return  "$"+parseInt(a,10).toString(10).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
+			}
 	},{
-		name:"Percent on foodstamps",
+		name: "On Foodstamps",
 		tables:"B22007_002E,B22007_001E",
+		translate:function(a){
+			return [parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -66,6 +90,8 @@ var items=[
 				b.push(ct);
 			}
 			return b;
+		},stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4)+"%";
 		}
 	},{
 		name:"Population",
@@ -73,6 +99,9 @@ var items=[
 	},{
 		name:"Most Welsh (Welsh per 10,000)",
 		tables:"B04001_093E,B04001_001E",
+		translate:function(a){
+			return [parseFloat(a[0])*10000 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -87,6 +116,9 @@ var items=[
 	},{
 		name:"LPM (Luxemburger Per Million)",
 		tables:"B04001_054E,B04001_001E",
+		translate:function(a){
+			return [parseFloat(a[0])*1000000 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -101,6 +133,9 @@ var items=[
 	},{
 		name:"Gender Ratio (Men per 100 Women)",
 		tables:"B01001_002E,B01001_026E",
+		translate:function(a){
+			return [parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -112,8 +147,12 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Movement (Percent Moved in last year)",
+		name:"Moved in Last Year",
 		tables:"B07001_001E,B07001_017E",
+		
+		translate:function(a){
+			return [ (parseFloat(a[0])-parseFloat(a[1]))*100 / parseFloat(a[0]), a[2], a[3]]; 
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -123,10 +162,15 @@ var items=[
 				b.push(ct);
 			}
 			return b;
+		},stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4)+"%";
 		}
 	},{
-		name:"Education (Didn't Graduate HS)",
+		name:"Didn't Graduate HS",
 		tables:"B06009_002E,B06009_001E",
+		translate:function(a){
+			return [ parseFloat(a[0])*100 / parseFloat(a[1]), a[2], a[3]]; 
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -136,21 +180,29 @@ var items=[
 				b.push(ct);
 			}
 			return b;
+		},stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4)+"%";
 		}
 	},{
 		name:"Rent as Percentage of Income",
-		tables:"B25071_001E"
+		tables:"B25071_001E",
+		stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4)+"%";
+		}
 		
 	},{
 		name:'Rooms per House',
 		tables:"B25018_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(2).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
+			return parseFloat(a,10).toPrecision(2).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		},
 		flip:true
 	},{
 		name:"Age of Structures (years)",
 		tables:"B25035_001E",
+		translate:function(a){
+			return [ (new Date()).getFullYear()-parseFloat(a[0]), a[1], a[2]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -165,6 +217,9 @@ var items=[
 	},{
 		name:"Houses Without Bathrooms (Per 10000)",
 		tables:"B25048_003E,B25048_001E",
+		translate:function(a){
+			return [ parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]]; 
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -179,11 +234,14 @@ var items=[
 		name:"Avg Hours Worked",
 		tables:"B23020_001E",
 		stringRep:function(a){
-			return  parseFloat(a,10).toPrecision(4).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
+			return parseFloat(a,10).toPrecision(4).replace(/([0-9]+?)([0-9]{3})(?=.*?\.|$)/mg, "$1,$2");
 		}
 	},{
 		name:"Whitest (White People per 10k)",
 		tables:"B02001_002E,B02001_001E",
+		translate:function(a){
+			return [ parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]]; 
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -197,6 +255,9 @@ var items=[
 	},{
 		name:"Blackest (Black People per 10k)",
 		tables:"B02001_003E,B02001_001E",
+		translate:function(a){
+			return [ parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]]; 
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -210,6 +271,9 @@ var items=[
 	},{
 		name:"Asians per 10K",
 		tables:"B02001_005E,B02001_001E",
+		translate:function(a){
+			return [ parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]]; 
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -223,6 +287,9 @@ var items=[
 	},{
 		name:"Native American per 10K",
 		tables:"B02001_004E,B02001_001E",
+		translate:function(a){
+			return [ parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]]; 
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -236,6 +303,9 @@ var items=[
 	},{
 		name:"Mixed Race People per 10K",
 		tables:"B02001_008E,B02001_001E",
+		translate:function(a){
+			return [ parseFloat(a[0])*10000/ parseFloat(a[1]), a[2], a[3]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
@@ -249,6 +319,9 @@ var items=[
 	},{
 		name:"Non Existent Nationalities (Czechoslovakian, Yugoslavian, and Soviet Union per 100K)",
 		tables:"B04001_107E,B04001_032E,B04001_072E,B04001_001E",
+		translate:function(a){
+			return [ (parseFloat(a[0])+parseFloat(a[1])+parseFloat(a[2]))*100000/ parseFloat(a[3]), a[4], a[5]];
+		},
 		transform:function(a)  {
 			var b = [];
 			var ct,i,len;
