@@ -49,11 +49,11 @@ var Selector = Backbone.View.extend({
 		var path=vizes.findWhere({name:location.pathname.slice(1).replace(/-/g," ")});
 		if(!path){
 			if('replaceState' in history){
-				history.replaceState({},"",'Percent-below-poverty-line');
+				history.replaceState({},"",'Below-Poverty-Line');
 			}else{
-				location.replace('/Percent-below-poverty-line')
+				location.replace('/Below-Poverty-Line')
 			}
-			path=vizes.findWhere({name:'Percent below poverty line'});
+			path=vizes.findWhere({name:'Below Poverty Line'});
 		}
 		path.set("active",true);
 		this.$el.html(this.template({items:this.collection.toJSON()}));
