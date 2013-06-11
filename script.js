@@ -1,3 +1,4 @@
+
 //fix for the layer controls
 L.Control.Layers.prototype._addItem= function (obj) {
 	var label = document.createElement('label'),
@@ -94,8 +95,7 @@ var Legend = Backbone.View.extend({
 
 var Polys = Backbone.View.extend({
 	el:$('#whichValue'),
-	apiKey : '0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f',
-	urlBase : 'http://api.census.gov/data/2011/acs5',
+	urlBase : 'https://data-otp.rhcloud.com/data/2011/acs5/counties/',
 	current : function(){return this.$el.val()},
 	collection:vizes,
 	obj:{},
@@ -115,12 +115,7 @@ var Polys = Backbone.View.extend({
 			
 	},
 	params : function(){
-		return {
-			"for":'county:*',
-			"in":'state:*',
-			"key":this.apiKey,
-			"get":this.$('option:selected').data('get')
-		}
+		return this.$('option:selected').data('get');
 	},
 	events:{
 		'change':'valueChange'
@@ -157,7 +152,11 @@ var Polys = Backbone.View.extend({
 	},
 	valueChange:function (){
 		var self = this;
-		$.ajax({url:polys.urlBase,data:polys.params(),dataType:'jsonp',jsonp:'jsonp',cache:true}).then(function(a){
+		var opts = {url:polys.urlBase+polys.params()}
+		if(window.XDomainRequest){
+			opts.dataType="jsonp";
+		}
+		$.ajax(opts).then(function(a){
 			self.buildValues( a);
 			self.collection.farOut=false;
 			updateMap();
@@ -259,9 +258,14 @@ var counties = L.geoJson({features:[]},{
 }).addTo(m);
 //add it to the map
 layerControl.addOverlay(counties,"Counties");
-var geoJson,waiting;
+var geoJson,opts;
 //download data to start us off
-$.when($.ajax('json/us-10m.json'),$.ajax({url:polys.urlBase,data:polys.params(),dataType:'jsonp',jsonp:'jsonp',cache:true})).then(function(a,b){
+opts = {url:polys.urlBase+polys.params()};
+		if(window.XDomainRequest){
+			opts.dataType="jsonp";
+		}
+		
+$.when($.ajax('json/us-10m.json'),$.ajax(opts)).then(function(a,b){
 	vizes.data = a[0];
 	var rows = b[0];
 	polys.buildValues (rows);
