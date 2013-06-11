@@ -213,7 +213,8 @@ var items=[
 				b.push(ct);
 			}
 			return b;
-		}
+		},
+		flip:true
 	},{
 		name:"Houses Without Bathrooms (Per 10000)",
 		tables:"B25048_003E,B25048_001E",
