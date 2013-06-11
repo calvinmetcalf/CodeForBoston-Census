@@ -52,11 +52,38 @@ var selector = new Selector();
 selector.render();
 
 var Legend = Backbone.View.extend({
-	template:Mustache.compile('<strong>Legend</strong><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul>'),
+	template:Mustache.compile('<div class="span2"><div class="text-center"><strong>{{{current}}}</strong></div><ul class="legend">{{#items}}<li><span style="background: {{color}};"></span>{{value}}</li>{{/items}}</ul></div>'),
 	render:function(){
-		var cur = vizes.findWhere({name:$('#whichValue').val()});
-		var vals = this.scale.quantiles().map(function(a,i){return {value:cur.get("stringRep")(a),color:colorbrewer.RdYlBu[11][!cur.get('flip')?10-i:i]}});
-		this.$el.html(this.template({items:vals}));
+	var cur = vizes.findWhere({name:$('#whichValue').val()});
+		var sc = this.scale.quantiles();
+		sc.push(sc[9]+1);
+		mapFunc=function(a,i){
+			var flip = cur.get('flip');
+			var out =  {};
+			if(i===0){
+				out.value="<"+cur.get("stringRep")(sc[1]);
+			}else if(i===10){
+				out.value=">"+cur.get("stringRep")(a);
+			}else{
+				out.value=cur.get("stringRep")(a) + " - "+ cur.get("stringRep")(sc[i+1]);
+			}
+			
+			out.color=colorbrewer.RdBu[11][!flip?10-i:i];
+			if(flip){
+				
+			}
+			return out;
+		};
+		var vals = sc.map(mapFunc);
+			if(cur.get('flip')){
+				vals.reverse();
+			}
+		this.$el.html(this.template({
+			items:vals,
+			flip:cur.get('flip'),
+			current:vizes.findWhere({name:$('#whichValue').val()}).get('name').replace(/\(/,'<br/>(')
+		}));
+		sc.pop();
 	},collection:vizes,
 	initialize:function(){
 		this.collection.on('renderLegend',function(){this.render()},this);
@@ -72,15 +99,18 @@ var Polys = Backbone.View.extend({
 	current : function(){return this.$el.val()},
 	collection:vizes,
 	obj:{},
+	stRep : function(){
+		return this.collection.findWhere({name:this.current()}).get('stringRep');
+	},
 	farOut:false,
 	style:function(id){
 		if(!this.obj[id]){
 			return;
 		}
 		if(!this.collection.findWhere({name:this.current()}).get('flip')){
-			return colorbrewer.RdYlBu[11][10-this.options.legend.scale(this.obj[id])];
+			return colorbrewer.RdBu[11][10-this.options.legend.scale(this.obj[id])];
 		}else{
-			return colorbrewer.RdYlBu[11][this.options.legend.scale(this.obj[id])];
+			return colorbrewer.RdBu[11][this.options.legend.scale(this.obj[id])];
 		}
 			
 	},
@@ -99,30 +129,29 @@ var Polys = Backbone.View.extend({
 		var self=this;
 		var vals = [];
 		var metric = this.current();
-		var rows;
-		var transform = self.collection.findWhere({name:metric}).get('transform');
-			if (transform) {
-				rows=transform(oRows);
-			} else {
-				rows=oRows;
-			}
-		if(rows[0].length===4){
-			_.each(rows,function(r){
+		//var rows;
+		var translate = self.collection.findWhere({name:metric}).get('translate');
+			//if (translate) {
+			//	rows=_.map(oRows,translate);
+			//} else {
+		//		rows=oRows;
+		//	}
+			//console.log(rows);
+			_.each(oRows,function(row){
+				var r;
+				if (translate) {
+					r=translate(row);
+				} else {
+					r=row;
+				}
+				//console.log(r,row);
 				var val = parseFloat(r[0],10);
-				self.obj[r[2]+r[3]]=val;
-				if(val){
-					vals.push(val);
-				}
+					self.obj[r[1]+r[2]]=val;
+					if(val){
+						vals.push(val);
+					}
 			});
-		}else if(rows[0].length===3){
-			_.each(rows,function(r){
-			var val = parseFloat(r[0],10);
-				self.obj[r[1]+r[2]]=val;
-				if(val){
-					vals.push(val);
-				}
-			});
-		}
+		
 		self.options.legend.scale.domain(vals);
 		self.collection.trigger('renderLegend');
 	},
@@ -211,8 +240,9 @@ var counties = L.geoJson({features:[]},{
 		if(id.length === 4){
 			id = '0'+id;
 		}
+		var strep = polys.stRep();
 		if(polys.obj[id]){
-			out.push(polys.current()+': '+polys.obj[id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+			out.push(polys.current()+': '+strep(polys.obj[id]));
 		}
 		l.bindPopup(out.join("<br />"));
 	},style:function(f){
@@ -251,10 +281,8 @@ function updateMap(){
 		];
 	if(zoom<6){
 		if(vizes.farOut){
-			console.log(1);
 			return;
 		}else{
-			console.log(2);
 			counties.clearLayers();
 			if(geoJson){
 				vizes.farOut=true;
@@ -264,10 +292,7 @@ function updateMap(){
 		}
 	}else{
 		if(vizes.farOut){
-			console.log(3);
 			vizes.farOut=false;
-		}else{
-			console.log(4);
 		}
 	}
 	rt.bbox(bbox).then(function(rData){
