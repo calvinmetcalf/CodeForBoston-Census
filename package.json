@@ -23,7 +23,9 @@
     "mustache": "~0.7.2",
     "request": "~2.21.0",
     "uglify-js": "~2.3.6",
-    "xml2js": "~0.2.7"
+    "xml2js": "~0.2.7",
+    "redis": "~0.8.3",
+    "hiredis": "~0.1.15"
   },
   "devDependencies": {},
   "bundleDependencies": [],

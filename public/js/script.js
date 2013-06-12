@@ -105,7 +105,7 @@ var Legend = Backbone.View.extend({
 
 var Polys = Backbone.View.extend({
 	el:$('#whichValue'),
-	urlBase : '/data/2011/acs5/counties/',
+	urlBase : '/data/',
 	current : function(){return this.$el.val()},
 	collection:vizes,
 	obj:{},
@@ -125,39 +125,15 @@ var Polys = Backbone.View.extend({
 			
 	},
 	params : function(){
-		return this.$('option:selected').data('get');
+		return this.current().replace(/\s/g,"-");
 	},
 	events:{
 		'change':'valueChange'
 	},
-	buildValues:function(oRows){
+	buildValues:function(obj){
 		var self=this;
-		var vals = [];
-		var metric = this.current();
-		//var rows;
-		var translate = self.collection.findWhere({name:metric}).get('translate');
-			//if (translate) {
-			//	rows=_.map(oRows,translate);
-			//} else {
-		//		rows=oRows;
-		//	}
-			//console.log(rows);
-			_.each(oRows,function(row){
-				var r;
-				if (translate) {
-					r=translate(row);
-				} else {
-					r=row;
-				}
-				//console.log(r,row);
-				var val = parseFloat(r[0],10);
-					self.obj[r[1]+r[2]]=val;
-					if(val){
-						vals.push(val);
-					}
-			});
-		
-		self.options.legend.scale.domain(vals);
+		self.obj=obj[0];
+		self.options.legend.scale.domain(obj[1]);
 		self.collection.trigger('renderLegend');
 	},
 	valueChange:function (){

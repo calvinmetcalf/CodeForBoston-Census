@@ -386,3 +386,6 @@ var items=[
 		tables:"B08103_002E"
 	}
 ];
+if(typeof module !== 'undefined'){
+	module.exports = items;
+}
