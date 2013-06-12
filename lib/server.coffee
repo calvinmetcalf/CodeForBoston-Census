@@ -14,14 +14,14 @@ kublai.use express.bodyParser()
 kublai.use express.logger('dev') 
 #kublai.use(require('less-middleware')({ src: './public/style' }))
 kublai.use express.static('./public')
-client = redis.createClient 10896,'dory.redistogo.com'
-client.auth 'c6ce6017ecd73bdbcbc23b1a1838919f'
+client = redis.createClient(10896,'dory.redistogo.com')
+client.auth('c6ce6017ecd73bdbcbc23b1a1838919f')
 
 #kublai.set 'json spaces',0
 kublai.get '/data/:year/:set/counties/:tables', (req,res)->
 	res.header "Access-Control-Allow-Origin", "*"
 	res.header "Access-Control-Allow-Headers", "X-Requested-With"
-	client.get req.params.tables, (err,tables)->
+	client.hget req.params.year+req.params.set,req.params.tables, (err,tables)->
 		if tables
 			res.jsonp(JSON.parse(tables))
 		else
@@ -35,7 +35,7 @@ kublai.get '/data/:year/:set/counties/:tables', (req,res)->
 				qs:qs
 				json:true
 			},(e,r,b)->
-				client.set req.params.tables, JSON.stringify(b)
+				client.hset req.params.year+req.params.set,req.params.tables, JSON.stringify(b)
 				res.jsonp b
 kublai.get '/data/:view', (req,res)->
 	res.header "Access-Control-Allow-Origin", "*"
@@ -44,7 +44,7 @@ kublai.get '/data/:view', (req,res)->
 	model = models.filter((m)->
 		return m.name==key)[0]
 	#console.log model
-	client.get key, (err,data)->
+	client.hget 'computed',key, (err,data)->
 		if data
 			res.jsonp(JSON.parse(data))
 		else
@@ -67,7 +67,7 @@ kublai.get '/data/:view', (req,res)->
 					val = parseFloat(row[0],10)
 					o[0][row[1]+row[2]]=val
 					o[1].push(val) if val
-				client.set key, JSON.stringify(o)
+				client.hset 'computed',key, JSON.stringify(o)
 				res.jsonp o
 kublai.get '/docs/:year/:set',(req,res)->
 	request "http://www.census.gov/developers/data/#{req.params.set.slice(0,3)}_#{req.params.set.slice(-1)}yr_#{req.params.year}_var.xml",(e,r,b)->
