@@ -113,7 +113,8 @@ var items=[
 			return b;
 		},
 		flip:true
-	},{
+	},
+	{
 		name:"LPM (Luxemburger Per Million)",
 		tables:"B04001_054E,B04001_001E",
 		translate:function(a){
