@@ -353,5 +353,35 @@ var items=[
 			}
 			return b;
 		}
+	},{
+		name:"Working Retail",
+		tables:"C24070_001E,C24070_006E",
+		translate:function(a){
+			return [parseFloat(a[1])*100 / parseFloat(a[0]), a[2], a[3]];
+		},
+		stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4)+"%";
+		}
+	},{
+		name:"Women Working per 100 Men",
+		tables:"C24030_002E,C24030_029E",
+		translate:function(a){
+			return [parseFloat(a[1])*100 / parseFloat(a[0]), a[2], a[3]];
+		}
+	},{
+		name:"Families with More then 5 Kids",
+		tables:"B11016_002E,B11016_008E",
+		translate:function(a){
+			return [parseFloat(a[1])*100 / parseFloat(a[0]), a[2], a[3]];
+		},
+		stringRep:function(a){
+			return  parseFloat(a,10).toPrecision(4)+"%";
+		}
+	},{
+		name:"Median Age Commuting On public transport",
+		tables:"B08103_004E"
+	},{
+		name:"Median Age Commuting Via Car",
+		tables:"B08103_002E"
 	}
 ];
