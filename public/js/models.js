@@ -354,7 +354,7 @@ var items=[
 			return b;
 		}
 	},{
-		name:"Asians People per Square Mile",
+		name:"Asian People per Square Mile",
 		tables:"B02001_005E",
 		translate:function(a){
 			return [parseFloat(a[0])*100 / areas[a[1]+a[2]], a[1], a[2]];
