@@ -1,7 +1,7 @@
 express = require 'express'
 fs = require 'fs'
 request = require 'request'
-redis = require "redis"
+redis = require("redis")
 xml2js = require 'xml2js'
 parser = new xml2js.Parser()
 index=fs.readFileSync './index.html','utf8'
@@ -21,22 +21,17 @@ client.auth('c6ce6017ecd73bdbcbc23b1a1838919f')
 kublai.get '/data/:year/:set/counties/:tables', (req,res)->
 	res.header "Access-Control-Allow-Origin", "*"
 	res.header "Access-Control-Allow-Headers", "X-Requested-With"
-	client.hget req.params.year+req.params.set,req.params.tables, (err,tables)->
-		if tables
-			res.jsonp(JSON.parse(tables))
-		else
-			qs = 
-				'for':'county:*'
-				'in':'state:*'
-				'key':'0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f'
-				'get':req.params.tables
-			request {
-				url:"http://api.census.gov/data/#{req.params.year}/#{req.params.set}"
-				qs:qs
-				json:true
-			},(e,r,b)->
-				client.hset req.params.year+req.params.set,req.params.tables, JSON.stringify(b)
-				res.jsonp b
+	qs = 
+		'for':'county:*'
+		'in':'state:*'
+		'key':'0a6b68796bfcfe694987a9ddf3eddd1b735dcd7f'
+		'get':req.params.tables
+	request {
+		url:"http://api.census.gov/data/#{req.params.year}/#{req.params.set}"
+		qs:qs
+		json:true
+	},(e,r,b)->
+		res.jsonp b
 kublai.get '/data/:view', (req,res)->
 	res.header "Access-Control-Allow-Origin", "*"
 	res.header "Access-Control-Allow-Headers", "X-Requested-With"
@@ -75,7 +70,7 @@ kublai.get '/docs/:year/:set',(req,res)->
 			parser.parseString b, (err,result)->
 				unless err
 					out = transform result
-					docs[req.params.year][req.params.set]=out
+					#docs[req.params.year][req.params.set]=out
 					res.jsonp(out)
 kublai.get '/', (req,res)->
 	res.send index

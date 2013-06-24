@@ -131,10 +131,9 @@ var Polys = Backbone.View.extend({
 		'change':'valueChange'
 	},
 	buildValues:function(obj){
-		var self=this;
-		self.obj=obj[0];
-		self.options.legend.scale.domain(obj[1]);
-		self.collection.trigger('renderLegend');
+		this.obj=obj[0];
+		this.options.legend.scale.domain(obj[1]);
+		this.collection.trigger('renderLegend');
 	},
 	valueChange:function (){
 		var self = this;
