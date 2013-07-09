@@ -2907,10 +2907,13 @@ var Polys = Backbone.View.extend({
 		'change':'valueChange'
 	},
 	buildValues:function(obj){
-		this.obj=obj[0];
-		if(typeof obj[1].filter === 'function'){
-			this.options.legend.scale.domain(obj[1]);
+		if(typeof obj==='string'){
+			obj=JSON.parse(obj);
 		}
+		this.obj=obj[0];
+
+			this.options.legend.scale.domain(obj[1]);
+		
 		this.collection.trigger('renderLegend');
 	},
 	valueChange:function (){

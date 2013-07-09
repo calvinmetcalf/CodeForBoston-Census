@@ -122,11 +122,17 @@ var Polys = Backbone.View.extend({
 		'change':'valueChange'
 	},
 	buildValues:function(obj){
+		if(typeof obj==='string'){
+			obj=JSON.parse(obj);
+		}
 		this.obj=obj[0];
-		this.options.legend.scale.domain(obj[1]);
+
+			this.options.legend.scale.domain(obj[1]);
+		
 		this.collection.trigger('renderLegend');
 	},
 	valueChange:function (){
+		m.spin(true);
 		var self = this;
 		var opts = {url:polys.urlBase+polys.params()}
 		if(window.XDomainRequest){
@@ -135,6 +141,7 @@ var Polys = Backbone.View.extend({
 		$.ajax(opts).then(function(a){
 			self.buildValues( a);
 			self.collection.farOut=false;
+			m.spin(false);
 			updateMap();
 		});
 	}
@@ -241,8 +248,9 @@ opts = {url:polys.urlBase+polys.params()};
 		if(window.XDomainRequest){
 			opts.dataType="jsonp";
 		}
-		
+m.spin(true);
 $.when($.ajax('json/us-10m.json'),$.ajax(opts)).then(function(a,b){
+	m.spin(false);
 	vizes.data = a[0];
 	var rows = b[0];
 	polys.buildValues (rows);
